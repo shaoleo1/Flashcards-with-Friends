@@ -10,10 +10,7 @@ import UIKit
 import Messages
 
 class MessagesViewController: MSMessagesAppViewController {
-    
-    @IBAction func searchQuizlet(_ sender: Any) {
-        print("Hi")
-    }
+    @IBOutlet weak var searchBox: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,5 +69,28 @@ class MessagesViewController: MSMessagesAppViewController {
     
         // Use this method to finalize any behaviors associated with the change in presentation style.
     }
+    
+    @IBAction func searchQuizlet(_ sender: UIButton) {
+        let params = ["q":searchBox.text, "client_id":"bFxdXkTKvW"] as! Dictionary<String, String>
+        
+        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets")!)
+        request.httpMethod = "GET"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+            print(response!)
+            do {
+                let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
+                print(json)
+            } catch {
+                print("error")
+            }
+        })
+        
+        task.resume()
+    }
+    
 
 }
