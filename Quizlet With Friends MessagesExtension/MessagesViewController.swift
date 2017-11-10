@@ -71,7 +71,7 @@ class MessagesViewController: MSMessagesAppViewController {
     }
     
     @IBAction func searchQuizlet(_ sender: UIButton) {
-        let params = ["q":searchBox.text, "client_id":"bFxdXkTKvW"] as! Dictionary<String, String>
+        let params = ["q":searchBox.text!, "client_id":"bFxdXkTKvW"]
         
         var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets")!)
         request.httpMethod = "GET"
