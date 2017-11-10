@@ -11,6 +11,10 @@ import Messages
 
 class MessagesViewController: MSMessagesAppViewController {
     
+    @IBAction func searchQuizlet(_ sender: Any) {
+        print("Hi")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.

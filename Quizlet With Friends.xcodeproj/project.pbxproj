@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		160DAD9F1FB618280051ADA9 /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 160DAD9E1FB618280051ADA9 /* search.png */; };
 		162538531FB60E010067EC67 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 162538521FB60E010067EC67 /* Assets.xcassets */; };
 		1625385A1FB60E010067EC67 /* Quizlet With Friends MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 162538591FB60E010067EC67 /* Quizlet With Friends MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1625385F1FB60E010067EC67 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1625385E1FB60E010067EC67 /* Messages.framework */; };
@@ -40,6 +41,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		160DAD9E1FB618280051ADA9 /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = search.png; path = ../../Downloads/search.png; sourceTree = "<group>"; };
+		160DADA01FB6182B0051ADA9 /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search.png; sourceTree = "<group>"; };
 		1625384F1FB60E000067EC67 /* Quizlet With Friends.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Quizlet With Friends.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		162538521FB60E010067EC67 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		162538541FB60E010067EC67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,6 +73,7 @@
 				162538601FB60E010067EC67 /* Quizlet With Friends MessagesExtension */,
 				1625385D1FB60E010067EC67 /* Frameworks */,
 				162538501FB60E000067EC67 /* Products */,
+				160DAD9E1FB618280051ADA9 /* search.png */,
 			);
 			sourceTree = "<group>";
 		};
@@ -102,6 +106,7 @@
 		162538601FB60E010067EC67 /* Quizlet With Friends MessagesExtension */ = {
 			isa = PBXGroup;
 			children = (
+				160DADA01FB6182B0051ADA9 /* search.png */,
 				162538611FB60E010067EC67 /* MessagesViewController.swift */,
 				162538631FB60E010067EC67 /* MainInterface.storyboard */,
 				162538661FB60E010067EC67 /* Assets.xcassets */,
@@ -192,6 +197,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				162538531FB60E010067EC67 /* Assets.xcassets in Resources */,
+				160DAD9F1FB618280051ADA9 /* search.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
