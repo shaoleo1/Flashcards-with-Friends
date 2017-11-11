@@ -81,7 +81,7 @@ class MessagesViewController: MSMessagesAppViewController {
     }
     
     func searchQuizlet() {
-        // Creates a 'request' variable with the URL of the Quizlet API. Sets 'q' equal to the URL encoded search query.
+        // Creates a 'request' variable with the URL of the Quizlet API. Sets 'q' equal to the URL encoded search query. URL encoding simply replaces spaces in the search query with '%20' so it becomes a valid URL.
         var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets?q=" + searchBox.text!.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)! + "&per_page=10&client_id=bFxdXkTKvW")!) // per_page=10 limits the results to 10 only, client_id is a required value to gain authorization to access the data, it's a unique key given to us.
         // Sets the http method to GET which means GETting data FROM the API. There are two methods, GET and POST. POST means POSTing data TO the API. In this case, we're using GET.
         request.httpMethod = "GET"
