@@ -71,11 +71,8 @@ class MessagesViewController: MSMessagesAppViewController {
     }
     
     @IBAction func searchQuizlet(_ sender: UIButton) {
-        let params = ["q":searchBox.text!, "client_id":"bFxdXkTKvW"]
-        
-        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets")!)
+        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets?q=" + searchBox.text! + "&client_id=bFxdXkTKvW")!)
         request.httpMethod = "GET"
-        request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("Bearer dS6TK6S5nnjNDHEcMtaN4Zegm96eqMVzdfx66S2F", forHTTPHeaderField: "Authorization")
         
