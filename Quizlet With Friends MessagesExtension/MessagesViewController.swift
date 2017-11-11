@@ -111,6 +111,7 @@ class MessagesViewController: MSMessagesAppViewController {
                                         if let term_count = setDictionary["term_count"] as? Int {
                                             // Prints 'title' - 'author' - 'term_count'
                                             print("\(title) - \(author) - \(term_count)")
+                                            // It will then iterate through the for loop again until all objects have been looped through, which should be 10 times since we limited the results to a maximum of 10.
                                         }
                                     }
                                 }
