@@ -71,7 +71,7 @@ class MessagesViewController: MSMessagesAppViewController {
     }
     
     @IBAction func searchQuizlet(_ sender: UIButton) {
-        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets?q=" + searchBox.text! + "&client_id=bFxdXkTKvW")!)
+        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets?q=" + searchBox.text!.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)! + "&per_page=10&client_id=bFxdXkTKvW")!)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("Bearer dS6TK6S5nnjNDHEcMtaN4Zegm96eqMVzdfx66S2F", forHTTPHeaderField: "Authorization")
