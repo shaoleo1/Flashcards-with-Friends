@@ -77,6 +77,7 @@ class MessagesViewController: MSMessagesAppViewController {
         request.httpMethod = "GET"
         request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("Bearer dS6TK6S5nnjNDHEcMtaN4Zegm96eqMVzdfx66S2F", forHTTPHeaderField: "Authorization")
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
