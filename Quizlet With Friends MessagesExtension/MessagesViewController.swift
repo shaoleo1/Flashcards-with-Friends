@@ -80,8 +80,22 @@ class MessagesViewController: MSMessagesAppViewController {
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             print(response!)
             do {
-                let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
-                print(json)
+                let json = try JSONSerialization.jsonObject(with: data!, options: [])
+                if let dictionary = json as? [String: Any] {
+                    if let nestedArray = dictionary["sets"] as? [Any] {
+                        for object in nestedArray {
+                            if let setDictionary = object as? [String: Any] {
+                                if let title = setDictionary["title"] as? String {
+                                    if let author = setDictionary["created_by"] as? String {
+                                        if let term_count = setDictionary["term_count"] as? Int {
+                                            print("\(title) - \(author) - \(term_count)")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             } catch {
                 print("error")
             }
