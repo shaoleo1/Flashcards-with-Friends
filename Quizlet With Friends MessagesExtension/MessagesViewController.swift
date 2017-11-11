@@ -76,26 +76,40 @@ class MessagesViewController: MSMessagesAppViewController {
     }
     
     @IBAction func searchButtonPressed(_ sender: UIButton) {
+        // When the search button is pressed, it calls the searchQuizlet() function.
         searchQuizlet()
     }
     
     func searchQuizlet() {
-        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets?q=" + searchBox.text!.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)! + "&per_page=10&client_id=bFxdXkTKvW")!)
+        // Creates a 'request' variable with the URL of the Quizlet API. Sets 'q' equal to the URL encoded search query.
+        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets?q=" + searchBox.text!.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)! + "&per_page=10&client_id=bFxdXkTKvW")!) // per_page=10 limits the results to 10 only, client_id is a required value to gain authorization to access the data, it's a unique key given to us.
+        // Sets the http method to GET which means GETting data FROM the API. There are two methods, GET and POST. POST means POSTing data TO the API. In this case, we're using GET.
         request.httpMethod = "GET"
+        // Sets the file type that the data will be retrieved to be JSON, which is the standard format.
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
+        // Starts the HTTP session (connects to the API URL with the search query and GETs the data.
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             print(response!)
             do {
+                // Converts and saves the returned data into a variable called 'json' in appropriate JSON formatting.
                 let json = try JSONSerialization.jsonObject(with: data!, options: [])
+                // Creates a dictionary from the JSON file to look up the value for the key given.
                 if let dictionary = json as? [String: Any] {
+                    // Creates an array of the returned study sets.
                     if let nestedArray = dictionary["sets"] as? [Any] {
+                        // Loops through every study set where 'object' is the name of the variable for the study set during that loop. It's the Java equivalent of an enhanced for loop--idk if you learned about it yet.
                         for object in nestedArray {
+                            // Creates a dictionary from the given study set.
                             if let setDictionary = object as? [String: Any] {
+                                // Looks up the title of the set and saves it into the variable 'title'
                                 if let title = setDictionary["title"] as? String {
+                                    // Looks up the author of the set and saves it into the variable 'author'
                                     if let author = setDictionary["created_by"] as? String {
+                                        // Looks up the term count of the set and saves it into the variable 'term_count'
                                         if let term_count = setDictionary["term_count"] as? Int {
+                                            // Prints 'title' - 'author' - 'term_count'
                                             print("\(title) - \(author) - \(term_count)")
                                         }
                                     }
