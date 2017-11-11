@@ -10,6 +10,7 @@ import UIKit
 import Messages
 
 class MessagesViewController: MSMessagesAppViewController {
+    
     @IBOutlet weak var searchBox: UITextField!
     
     override func viewDidLoad() {
@@ -70,11 +71,18 @@ class MessagesViewController: MSMessagesAppViewController {
         // Use this method to finalize any behaviors associated with the change in presentation style.
     }
     
-    @IBAction func searchQuizlet(_ sender: UIButton) {
-        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets?q=" + searchBox.text!.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)! + "&per_page=10&client_id=bFxdXkTKvW")!)
+    @IBAction func editingEnded(_ sender: UITextField) {
+        searchQuizlet()
+    }
+    
+    @IBAction func searchButtonPressed(_ sender: UIButton) {
+        searchQuizlet()
+    }
+    
+    func searchQuizlet() {
+        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets?q=" + searchBox.text!.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)! + "&per_page=10&client_id=bFxdXkTKvW")!)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("Bearer dS6TK6S5nnjNDHEcMtaN4Zegm96eqMVzdfx66S2F", forHTTPHeaderField: "Authorization")
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
@@ -100,9 +108,7 @@ class MessagesViewController: MSMessagesAppViewController {
                 print("error")
             }
         })
-        
         task.resume()
     }
-    
 
 }

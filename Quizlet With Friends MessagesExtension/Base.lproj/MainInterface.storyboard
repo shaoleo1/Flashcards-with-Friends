@@ -22,6 +22,9 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="editingEnded:" destination="ObA-dk-sSI" eventType="editingDidEnd" id="EzG-Ay-wsv"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d3N-jb-cVk">
                                 <rect key="frame" x="277" y="24" width="22" height="22"/>
@@ -31,7 +34,7 @@
                                 </constraints>
                                 <state key="normal" title="Button" image="search.png"/>
                                 <connections>
-                                    <action selector="searchQuizlet:" destination="ObA-dk-sSI" eventType="touchUpInside" id="nzP-gL-dL6"/>
+                                    <action selector="searchButtonPressed:" destination="ObA-dk-sSI" eventType="touchUpInside" id="Q4k-in-v14"/>
                                 </connections>
                             </button>
                         </subviews>
