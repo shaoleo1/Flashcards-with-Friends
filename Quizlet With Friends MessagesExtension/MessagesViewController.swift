@@ -9,9 +9,9 @@
 import UIKit
 import Messages
 
-class MessagesViewController: MSMessagesAppViewController {
+class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
     
-    @IBOutlet weak var searchBox: UITextField!
+    @IBOutlet weak var searchBox: UISearchBar!
     @IBOutlet weak var buttonSetOne: UIButton!
     @IBOutlet weak var buttonSetTwo: UIButton!
     @IBOutlet weak var buttonSetThree: UIButton!
@@ -29,6 +29,7 @@ class MessagesViewController: MSMessagesAppViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        searchBox.delegate = self
     }
     
     override func didReceiveMemoryWarning() {
@@ -83,18 +84,16 @@ class MessagesViewController: MSMessagesAppViewController {
     
         // Use this method to finalize any behaviors associated with the change in presentation style.
     }
-    
-    @IBAction func editingEnded(_ sender: UITextField) {
-        // When editing ends, it calls the searchQuizlet() function.
-        searchQuizlet()
-    }
+
     @IBAction func setButtonPressed(_ sender: UIButton) {
         // Prints the ID of the button pressed. Each button has a tag from 1-10. It subtracts 1 because indexes go from 0-9.
         print(buttonSetIDs[sender.tag - 1]!)
     }
     
-    @IBAction func searchButtonPressed(_ sender: UIButton) {
-        // When the search button is pressed, it calls the searchQuizlet() function.
+    func searchBarSearchButtonClicked(_ searchBox: UISearchBar)  {
+        // Closes the keyboard
+        searchBox.resignFirstResponder()
+        // Calls the searchQuizlet() function
         searchQuizlet()
     }
     

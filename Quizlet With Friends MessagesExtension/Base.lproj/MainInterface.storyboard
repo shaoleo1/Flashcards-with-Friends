@@ -17,28 +17,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search for study sets" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ff5-Nq-WWV">
-                                <rect key="frame" x="16" y="20" width="288" height="30"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <action selector="editingEnded:" destination="ObA-dk-sSI" eventType="editingDidEnd" id="EzG-Ay-wsv"/>
-                                </connections>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d3N-jb-cVk">
-                                <rect key="frame" x="277" y="24" width="22" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="22" id="8lU-rr-rXu"/>
-                                    <constraint firstAttribute="height" constant="22" id="bqT-tI-yOr"/>
-                                </constraints>
-                                <state key="normal" title="Button" image="search.png"/>
-                                <connections>
-                                    <action selector="searchButtonPressed:" destination="ObA-dk-sSI" eventType="touchUpInside" id="Q4k-in-v14"/>
-                                </connections>
-                            </button>
                             <button hidden="YES" opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sF1-6R-x6n" userLabel="1">
-                                <rect key="frame" x="16" y="58" width="288" height="32"/>
+                                <rect key="frame" x="16" y="96" width="288" height="32"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal">
@@ -49,7 +29,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WJi-wl-l9B" userLabel="2">
-                                <rect key="frame" x="16" y="98" width="288" height="32"/>
+                                <rect key="frame" x="16" y="136" width="288" height="32"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal">
@@ -60,7 +40,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LwQ-XH-3Sg" userLabel="3">
-                                <rect key="frame" x="16" y="138" width="288" height="32"/>
+                                <rect key="frame" x="16" y="176" width="288" height="32"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal">
@@ -71,7 +51,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BvZ-33-xFx" userLabel="4">
-                                <rect key="frame" x="16" y="178" width="288" height="32"/>
+                                <rect key="frame" x="16" y="216" width="288" height="32"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal">
@@ -82,7 +62,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6nK-UA-WCb" userLabel="5">
-                                <rect key="frame" x="16" y="218" width="288" height="32"/>
+                                <rect key="frame" x="16" y="256" width="288" height="32"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal">
@@ -93,7 +73,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A3v-Oa-OIz" userLabel="6">
-                                <rect key="frame" x="16" y="258" width="288" height="32"/>
+                                <rect key="frame" x="16" y="296" width="288" height="32"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal">
@@ -104,7 +84,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kPi-2F-YzG" userLabel="7">
-                                <rect key="frame" x="16" y="298" width="288" height="32"/>
+                                <rect key="frame" x="16" y="336" width="288" height="32"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal">
@@ -115,7 +95,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" tag="8" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="30g-Dw-pqN" userLabel="8">
-                                <rect key="frame" x="16" y="338" width="288" height="32"/>
+                                <rect key="frame" x="16" y="376" width="288" height="32"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal">
@@ -126,7 +106,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3MA-7Z-ww9" userLabel="9">
-                                <rect key="frame" x="16" y="378" width="288" height="32"/>
+                                <rect key="frame" x="16" y="416" width="288" height="32"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal">
@@ -137,7 +117,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x1V-CS-C2Y" userLabel="10">
-                                <rect key="frame" x="16" y="418" width="288" height="32"/>
+                                <rect key="frame" x="16" y="456" width="288" height="32"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal">
@@ -147,24 +127,27 @@
                                     <action selector="setButtonPressed:" destination="ObA-dk-sSI" eventType="touchUpInside" id="Ac3-FR-PPl"/>
                                 </connections>
                             </button>
+                            <searchBar contentMode="redraw" placeholder="Search for study sets" translatesAutoresizingMaskIntoConstraints="NO" id="Tt3-zF-1Bp">
+                                <rect key="frame" x="0.0" y="20" width="320" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="A3v-Oa-OIz" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="018-lT-Cpw"/>
-                            <constraint firstItem="d3N-jb-cVk" firstAttribute="leading" secondItem="ff5-Nq-WWV" secondAttribute="trailing" constant="-27" id="428-pc-c4A"/>
                             <constraint firstItem="kPi-2F-YzG" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="5sv-N9-UUd"/>
                             <constraint firstItem="WJi-wl-l9B" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="6PV-33-fCp"/>
                             <constraint firstItem="3MA-7Z-ww9" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="7gQ-T4-Yg6"/>
                             <constraint firstItem="30g-Dw-pqN" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="9DY-Gn-3LG"/>
                             <constraint firstItem="kPi-2F-YzG" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="BBi-ag-kLY"/>
                             <constraint firstItem="x1V-CS-C2Y" firstAttribute="top" secondItem="3MA-7Z-ww9" secondAttribute="bottom" constant="8" id="BUa-E0-cz0"/>
+                            <constraint firstItem="Tt3-zF-1Bp" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" id="BfC-Dw-ScH"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="sF1-6R-x6n" secondAttribute="trailing" constant="16" id="CnX-zU-DVa"/>
-                            <constraint firstItem="sF1-6R-x6n" firstAttribute="top" secondItem="ff5-Nq-WWV" secondAttribute="bottom" constant="8" id="DGj-Eu-wSZ"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="LwQ-XH-3Sg" secondAttribute="trailing" constant="16" id="FIu-Ns-BbG"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="6nK-UA-WCb" secondAttribute="trailing" constant="16" id="GQY-Gs-i95"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="30g-Dw-pqN" secondAttribute="trailing" constant="16" id="HNV-3C-M52"/>
-                            <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="ff5-Nq-WWV" secondAttribute="trailing" constant="16" id="JUC-tf-dYm"/>
                             <constraint firstItem="6nK-UA-WCb" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="M4e-X9-hXa"/>
+                            <constraint firstItem="sF1-6R-x6n" firstAttribute="top" secondItem="Tt3-zF-1Bp" secondAttribute="bottom" constant="20" id="MUH-aH-oEp"/>
                             <constraint firstItem="30g-Dw-pqN" firstAttribute="top" secondItem="kPi-2F-YzG" secondAttribute="bottom" constant="8" id="NXT-du-OeX"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="A3v-Oa-OIz" secondAttribute="trailing" constant="16" id="NYA-F8-ODp"/>
                             <constraint firstItem="WJi-wl-l9B" firstAttribute="top" secondItem="sF1-6R-x6n" secondAttribute="bottom" constant="8" id="R8N-Tk-FNm"/>
@@ -173,9 +156,7 @@
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="WJi-wl-l9B" secondAttribute="trailing" constant="16" id="UOx-9I-wsR"/>
                             <constraint firstItem="A3v-Oa-OIz" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="UeM-BS-IPk"/>
                             <constraint firstItem="sF1-6R-x6n" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="Uol-UC-wAb"/>
-                            <constraint firstItem="ff5-Nq-WWV" firstAttribute="top" secondItem="LDy-ih-0nr" secondAttribute="top" id="Uud-DF-9fe"/>
                             <constraint firstItem="LwQ-XH-3Sg" firstAttribute="top" secondItem="WJi-wl-l9B" secondAttribute="bottom" constant="8" id="VFz-1s-qnL"/>
-                            <constraint firstItem="ff5-Nq-WWV" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="WHg-sa-Zfy"/>
                             <constraint firstItem="3MA-7Z-ww9" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="Yk5-kM-WS2"/>
                             <constraint firstItem="kPi-2F-YzG" firstAttribute="top" secondItem="A3v-Oa-OIz" secondAttribute="bottom" constant="8" id="bcw-xt-Psc"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="BvZ-33-xFx" secondAttribute="trailing" constant="16" id="biA-27-9fp"/>
@@ -185,15 +166,17 @@
                             <constraint firstItem="LwQ-XH-3Sg" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="fT5-z9-fWf"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="3MA-7Z-ww9" secondAttribute="trailing" constant="16" id="fch-02-paY"/>
                             <constraint firstItem="BvZ-33-xFx" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="fu2-8V-lrE"/>
+                            <constraint firstItem="Tt3-zF-1Bp" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="gPA-pU-xSg"/>
                             <constraint firstItem="x1V-CS-C2Y" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="geO-WD-48k"/>
                             <constraint firstItem="sF1-6R-x6n" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="kKW-l4-kfI"/>
+                            <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="Tt3-zF-1Bp" secondAttribute="trailing" id="kgu-d1-dU5"/>
                             <constraint firstItem="WJi-wl-l9B" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="lEk-v1-OKT"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="x1V-CS-C2Y" secondAttribute="trailing" constant="16" id="ogk-8L-ZMc"/>
-                            <constraint firstItem="d3N-jb-cVk" firstAttribute="centerY" secondItem="ff5-Nq-WWV" secondAttribute="centerY" id="r1l-7h-PGi"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="kPi-2F-YzG" secondAttribute="trailing" constant="16" id="rDm-Sw-VDe"/>
                             <constraint firstItem="6nK-UA-WCb" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="sYu-0g-kef"/>
                             <constraint firstItem="3MA-7Z-ww9" firstAttribute="top" secondItem="30g-Dw-pqN" secondAttribute="bottom" constant="8" id="skR-w2-y0C"/>
                             <constraint firstItem="BvZ-33-xFx" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="svN-YN-qv6"/>
+                            <constraint firstItem="Tt3-zF-1Bp" firstAttribute="top" secondItem="LDy-ih-0nr" secondAttribute="top" id="tgD-qX-yar"/>
                             <constraint firstItem="A3v-Oa-OIz" firstAttribute="top" secondItem="6nK-UA-WCb" secondAttribute="bottom" constant="8" id="zdN-aP-Ij6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="LDy-ih-0nr"/>
@@ -211,7 +194,7 @@
                         <outlet property="buttonSetTen" destination="x1V-CS-C2Y" id="uFH-3D-7iX"/>
                         <outlet property="buttonSetThree" destination="LwQ-XH-3Sg" id="q7l-1e-nco"/>
                         <outlet property="buttonSetTwo" destination="WJi-wl-l9B" id="ezM-UR-3xd"/>
-                        <outlet property="searchBox" destination="ff5-Nq-WWV" id="r8d-MC-En3"/>
+                        <outlet property="searchBox" destination="Tt3-zF-1Bp" id="Xld-nr-vOC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X47-rx-isc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -219,7 +202,4 @@
             <point key="canvasLocation" x="33.333333333333336" y="31.793478260869566"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="search.png" width="200" height="200"/>
-    </resources>
 </document>
