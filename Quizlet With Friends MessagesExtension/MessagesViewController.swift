@@ -12,6 +12,19 @@ import Messages
 class MessagesViewController: MSMessagesAppViewController {
     
     @IBOutlet weak var searchBox: UITextField!
+    @IBOutlet weak var buttonSetOne: UIButton!
+    @IBOutlet weak var buttonSetTwo: UIButton!
+    @IBOutlet weak var buttonSetThree: UIButton!
+    @IBOutlet weak var buttonSetFour: UIButton!
+    @IBOutlet weak var buttonSetFive: UIButton!
+    @IBOutlet weak var buttonSetSix: UIButton!
+    @IBOutlet weak var buttonSetSeven: UIButton!
+    @IBOutlet weak var buttonSetEight: UIButton!
+    @IBOutlet weak var buttonSetNine: UIButton!
+    @IBOutlet weak var buttonSetTen: UIButton!
+    
+    // Declares an array of the study set IDs corresponding to the appropriate buttons.
+    var buttonSetIDs = [Int?](repeating: nil, count: 10)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +85,12 @@ class MessagesViewController: MSMessagesAppViewController {
     }
     
     @IBAction func editingEnded(_ sender: UITextField) {
+        // When editing ends, it calls the searchQuizlet() function.
         searchQuizlet()
+    }
+    @IBAction func setButtonPressed(_ sender: UIButton) {
+        // Prints the ID of the button pressed. Each button has a tag from 1-10. It subtracts 1 because indexes go from 0-9.
+        print(buttonSetIDs[sender.tag - 1]!)
     }
     
     @IBAction func searchButtonPressed(_ sender: UIButton) {
@@ -81,6 +99,9 @@ class MessagesViewController: MSMessagesAppViewController {
     }
     
     func searchQuizlet() {
+        // Creates an array of buttons in order from 1-10 for ordered iteration
+        let buttons: [UIButton] = [self.buttonSetOne, self.buttonSetTwo, self.buttonSetThree, self.buttonSetFour, self.buttonSetFive, self.buttonSetSix, self.buttonSetSeven, self.buttonSetEight, self.buttonSetNine, self.buttonSetTen]
+        
         // Creates a 'request' variable with the URL of the Quizlet API. Sets 'q' equal to the URL encoded search query. URL encoding simply replaces spaces in the search query with '%20' so it becomes a valid URL.
         var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/search/sets?q=" + searchBox.text!.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)! + "&per_page=10&client_id=bFxdXkTKvW")!) // per_page=10 limits the results to 10 only, client_id is a required value to gain authorization to access the data, it's a unique key given to us.
         // Sets the http method to GET which means GETting data FROM the API. There are two methods, GET and POST. POST means POSTing data TO the API. In this case, we're using GET.
@@ -88,7 +109,7 @@ class MessagesViewController: MSMessagesAppViewController {
         // Sets the file type that the data will be retrieved to be JSON, which is the standard format.
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        // Starts the HTTP session (connects to the API URL with the search query and GETs the data.
+        // Starts the HTTP session (connects to the API URL with the search query and GETs the data).
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             print(response!)
@@ -100,17 +121,29 @@ class MessagesViewController: MSMessagesAppViewController {
                     // Creates an array of the returned study sets.
                     if let nestedArray = dictionary["sets"] as? [Any] {
                         // Loops through every study set where 'object' is the name of the variable for the study set during that loop. It's the Java equivalent of an enhanced for loop--idk if you learned about it yet.
-                        for object in nestedArray {
+                        for (index, object) in nestedArray.enumerated() {
                             // Creates a dictionary from the given study set.
                             if let setDictionary = object as? [String: Any] {
-                                // Looks up the title of the set and saves it into the variable 'title'
+                                // Looks up the title of the set and saves it into the variable 'title'.
                                 if let title = setDictionary["title"] as? String {
-                                    // Looks up the author of the set and saves it into the variable 'author'
+                                    // Looks up the author of the set and saves it into the variable 'author'.
                                     if let author = setDictionary["created_by"] as? String {
-                                        // Looks up the term count of the set and saves it into the variable 'term_count'
+                                        // Looks up the term count of the set and saves it into the variable 'term_count'.
                                         if let term_count = setDictionary["term_count"] as? Int {
-                                            // Prints 'title' - 'author' - 'term_count'
+                                            // Prints 'title' - 'author' - 'term_count'.
                                             print("\(title) - \(author) - \(term_count)")
+                                            // Looks up the id of the set and saves it into the variable 'id'.
+                                            if let id = setDictionary["id"] as? Int {
+                                                // Saves the id into the appropriate index of the buttonSetIDs array.
+                                                self.buttonSetIDs[index] = id
+                                            }
+                                            // Uses the main thread--required to make UI changes.
+                                            DispatchQueue.main.async() {
+                                                // Shows the button.
+                                                buttons[index].isHidden = false
+                                                // Sets the button text.
+                                                buttons[index].setTitle("\(title) by \(author) - \(term_count) terms", for: .normal)
+                                            }
                                             // It will then iterate through the for loop again until all objects have been looped through, which should be 10 times since we limited the results to a maximum of 10.
                                         }
                                     }
