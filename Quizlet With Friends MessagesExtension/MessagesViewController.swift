@@ -25,6 +25,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
     
     // Declares an array of the study set IDs corresponding to the appropriate buttons.
     var buttonSetIDs = [Int?](repeating: nil, count: 10)
+    var buttonSetTitles = [String?](repeating: nil, count: 10)
+    var buttonSetAuthors = [String?](repeating: nil, count: 10)
+    var buttonSetTermCounts = [Int?](repeating: nil, count: 10)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,10 +87,38 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
     
         // Use this method to finalize any behaviors associated with the change in presentation style.
     }
+    
+    private func composeMessage(setTitle: String, setAuthor: String, term_count: Int, setID: Int, questionNumber: Int, numberCorrect: Int) {
+        guard let conversation = activeConversation else { fatalError("Expected a conversation") }
+        let session = conversation.selectedMessage?.session ?? MSSession()
+        let messageCaption = NSLocalizedString("Let's play a Quizlet game.", comment: "")
+        
+        let layout = MSMessageTemplateLayout()
+        layout.image = UIImage(named: "quizlet.png")
+        layout.imageTitle = "\(setTitle) by \(setAuthor)"
+        layout.caption = messageCaption
+        layout.subcaption = "\(term_count) terms"
+        
+        var components = URLComponents()
+        let queryItems = [URLQueryItem(name: "setID", value: String(setID)), URLQueryItem(name: "questionNumber", value: String(questionNumber)), URLQueryItem(name: "numberCorrect", value: String(numberCorrect))]
+        components.queryItems = queryItems
+        
+        let message = MSMessage(session: session)
+        message.layout = layout
+        message.url = components.url!
+        message.accessibilityLabel = messageCaption
+        
+        conversation.insert(message) { error in
+            if let error = error {
+                print(error)
+            }
+        }
+    }
 
     @IBAction func setButtonPressed(_ sender: UIButton) {
         // Prints the ID of the button pressed. Each button has a tag from 1-10. It subtracts 1 because indexes go from 0-9.
         print(buttonSetIDs[sender.tag - 1]!)
+        composeMessage(setTitle: buttonSetTitles[sender.tag - 1]!, setAuthor: buttonSetAuthors[sender.tag - 1]!, term_count: buttonSetTermCounts[sender.tag - 1]!, setID: buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0)
     }
     
     func searchBarSearchButtonClicked(_ searchBox: UISearchBar)  {
@@ -97,7 +128,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
         searchQuizlet()
     }
     
-    func searchQuizlet() {
+    private func searchQuizlet() {
         // Creates an array of buttons in order from 1-10 for ordered iteration
         let buttons: [UIButton] = [self.buttonSetOne, self.buttonSetTwo, self.buttonSetThree, self.buttonSetFour, self.buttonSetFive, self.buttonSetSix, self.buttonSetSeven, self.buttonSetEight, self.buttonSetNine, self.buttonSetTen]
         
@@ -135,6 +166,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
                                             if let id = setDictionary["id"] as? Int {
                                                 // Saves the id into the appropriate index of the buttonSetIDs array.
                                                 self.buttonSetIDs[index] = id
+                                                self.buttonSetTitles[index] = title
+                                                self.buttonSetAuthors[index] = author
+                                                self.buttonSetTermCounts[index] = term_count
                                             }
                                             // Uses the main thread--required to make UI changes.
                                             DispatchQueue.main.async() {

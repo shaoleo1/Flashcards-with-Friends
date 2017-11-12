@@ -14,6 +14,7 @@
 		162538621FB60E010067EC67 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162538611FB60E010067EC67 /* MessagesViewController.swift */; };
 		162538651FB60E010067EC67 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 162538631FB60E010067EC67 /* MainInterface.storyboard */; };
 		162538671FB60E010067EC67 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 162538661FB60E010067EC67 /* Assets.xcassets */; };
+		16D0A64E1FB8EA9E007FEA66 /* quizlet.png in Resources */ = {isa = PBXBuildFile; fileRef = 16D0A64D1FB8EA9E007FEA66 /* quizlet.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		162538641FB60E010067EC67 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		162538661FB60E010067EC67 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		162538681FB60E010067EC67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		16D0A64D1FB8EA9E007FEA66 /* quizlet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quizlet.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 		162538601FB60E010067EC67 /* Quizlet With Friends MessagesExtension */ = {
 			isa = PBXGroup;
 			children = (
+				16D0A64D1FB8EA9E007FEA66 /* quizlet.png */,
 				160DADA31FB61D090051ADA9 /* search.png */,
 				162538611FB60E010067EC67 /* MessagesViewController.swift */,
 				162538631FB60E010067EC67 /* MainInterface.storyboard */,
@@ -202,6 +205,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16D0A64E1FB8EA9E007FEA66 /* quizlet.png in Resources */,
 				162538671FB60E010067EC67 /* Assets.xcassets in Resources */,
 				160DADA41FB61D090051ADA9 /* search.png in Resources */,
 				162538651FB60E010067EC67 /* MainInterface.storyboard in Resources */,
