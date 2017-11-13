@@ -22,6 +22,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
     @IBOutlet weak var buttonSetEight: UIButton!
     @IBOutlet weak var buttonSetNine: UIButton!
     @IBOutlet weak var buttonSetTen: UIButton!
+    @IBOutlet weak var termLabel: UILabel!
+    @IBOutlet weak var definitionTextBox: UITextField!
     
     // Declares an array of the study set IDs corresponding to the appropriate buttons.
     var buttonSetIDs = [Int?](repeating: nil, count: 10)
@@ -47,6 +49,63 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
         // This will happen when the extension is about to present UI.
         
         // Use this method to configure the extension and restore previously stored state.
+        
+        if let message = conversation.selectedMessage {
+            searchBox.isHidden = true
+            buttonSetOne.isHidden = true
+            buttonSetTwo.isHidden = true
+            buttonSetThree.isHidden = true
+            buttonSetFour.isHidden = true
+            buttonSetFive.isHidden = true
+            buttonSetSix.isHidden = true
+            buttonSetSeven.isHidden = true
+            buttonSetEight.isHidden = true
+            buttonSetNine.isHidden = true
+            buttonSetTen.isHidden = true
+            
+            let setID = getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setID")
+            // Creates a 'request' variable with the URL of the Quizlet API. Sets 'q' equal to the URL encoded search query. URL encoding simply replaces spaces in the search query with '%20' so it becomes a valid URL.
+            var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/sets/" + setID! + "?client_id=bFxdXkTKvW")!)
+            // Sets the http method to GET which means GETting data FROM the API. There are two methods, GET and POST. POST means POSTing data TO the API. In this case, we're using GET.
+            request.httpMethod = "GET"
+            // Sets the file type that the data will be retrieved to be JSON, which is the standard format.
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            // Starts the HTTP session (connects to the API URL with the search query and GETs the data).
+            let session = URLSession.shared
+            let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+                print(response!)
+                do {
+                    // Converts and saves the returned data into a variable called 'json' in appropriate JSON formatting.
+                    let json = try JSONSerialization.jsonObject(with: data!, options: [])
+                    // Creates a dictionary from the JSON file to look up the value for the key given.
+                    if let dictionary = json as? [String: Any] {
+                        // Creates an array of the returned terms.
+                        if let nestedArray = dictionary["terms"] as? [Any] {
+                            if let currentTerm = nestedArray[Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)! - 1] as? [String: Any] {
+                                // Looks up the term and saves it into the variable 'term'.
+                                if let term = currentTerm["term"] as? String {
+                                    // Looks up the definition and saves it into the variable 'definition'.
+                                    if let definition = currentTerm["definition"] as? String {
+                                        // Prints 'term' - 'definition'.
+                                        print("\(term) - \(definition)")
+                                        DispatchQueue.main.async() {
+                                            self.termLabel.text = term
+                                            self.termLabel.isHidden = false
+                                            self.definitionTextBox.isHidden = false
+                                        }
+                                        // It will then iterate through the for loop again until all terms have been looped through.
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch {
+                    print("error")
+                }
+            })
+            task.resume()
+        }
     }
     
     override func didResignActive(with conversation: MSConversation) {
@@ -65,6 +124,63 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
         
         // Use this method to trigger UI updates in response to the message.
     }
+    
+    override func didSelect(_ message: MSMessage, conversation: MSConversation) {
+        searchBox.isHidden = true
+        buttonSetOne.isHidden = true
+        buttonSetTwo.isHidden = true
+        buttonSetThree.isHidden = true
+        buttonSetFour.isHidden = true
+        buttonSetFive.isHidden = true
+        buttonSetSix.isHidden = true
+        buttonSetSeven.isHidden = true
+        buttonSetEight.isHidden = true
+        buttonSetNine.isHidden = true
+        buttonSetTen.isHidden = true
+        
+        let setID = getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setID")
+        // Creates a 'request' variable with the URL of the Quizlet API. Sets 'q' equal to the URL encoded search query. URL encoding simply replaces spaces in the search query with '%20' so it becomes a valid URL.
+        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/sets/" + setID! + "?client_id=bFxdXkTKvW")!)
+        // Sets the http method to GET which means GETting data FROM the API. There are two methods, GET and POST. POST means POSTing data TO the API. In this case, we're using GET.
+        request.httpMethod = "GET"
+        // Sets the file type that the data will be retrieved to be JSON, which is the standard format.
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Starts the HTTP session (connects to the API URL with the search query and GETs the data).
+        let session = URLSession.shared
+        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+            print(response!)
+            do {
+                // Converts and saves the returned data into a variable called 'json' in appropriate JSON formatting.
+                let json = try JSONSerialization.jsonObject(with: data!, options: [])
+                // Creates a dictionary from the JSON file to look up the value for the key given.
+                if let dictionary = json as? [String: Any] {
+                    // Creates an array of the returned terms.
+                    if let nestedArray = dictionary["terms"] as? [Any] {
+                        if let currentTerm = nestedArray[Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)! - 1] as? [String: Any] {
+                            // Looks up the term and saves it into the variable 'term'.
+                            if let term = currentTerm["term"] as? String {
+                                // Looks up the definition and saves it into the variable 'definition'.
+                                if let definition = currentTerm["definition"] as? String {
+                                    // Prints 'term' - 'definition'.
+                                    print("\(term) - \(definition)")
+                                    DispatchQueue.main.async() {
+                                        self.termLabel.text = term
+                                        self.termLabel.isHidden = false
+                                        self.definitionTextBox.isHidden = false
+                                    }
+                                    // It will then iterate through the for loop again until all terms have been looped through.
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch {
+                print("error")
+            }
+        })
+        task.resume()
+        }
     
     override func didStartSending(_ message: MSMessage, conversation: MSConversation) {
         // Called when the user taps the send button.
@@ -88,6 +204,11 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
         // Use this method to finalize any behaviors associated with the change in presentation style.
     }
     
+    private func getQueryStringParameter(url: String, param: String) -> String? {
+        guard let url = URLComponents(string: url) else { return nil }
+        return url.queryItems?.first(where: { $0.name == param })?.value
+    }
+    
     struct Quiz {
         let setTitle: String
         let setAuthor: String
@@ -96,6 +217,13 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
         var questionNumber: Int
         var numberCorrect: Int
         var opponentLastCorrect: Bool?
+    }
+    
+    private func isSenderSameAsRecipient() -> Bool {
+        guard let conversation = activeConversation else { return false }
+        guard let message = conversation.selectedMessage else { return false }
+        
+        return message.senderParticipantIdentifier == conversation.localParticipantIdentifier
     }
     
     private func composeMessage(quiz: Quiz) {
@@ -116,6 +244,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
         let message = MSMessage(session: session)
         message.layout = layout
         message.url = components.url!
+        message.summaryText = "Quizlet With Friends"
         message.accessibilityLabel = messageCaption
         
         conversation.insert(message) { error in
