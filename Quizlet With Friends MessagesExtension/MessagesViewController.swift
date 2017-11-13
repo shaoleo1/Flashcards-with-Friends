@@ -88,19 +88,29 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
         // Use this method to finalize any behaviors associated with the change in presentation style.
     }
     
-    private func composeMessage(setTitle: String, setAuthor: String, term_count: Int, setID: Int, questionNumber: Int, numberCorrect: Int) {
+    struct Quiz {
+        let setTitle: String
+        let setAuthor: String
+        let term_count: Int
+        let setID: Int
+        var questionNumber: Int
+        var numberCorrect: Int
+        var opponentLastCorrect: Bool?
+    }
+    
+    private func composeMessage(quiz: Quiz) {
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
         let session = conversation.selectedMessage?.session ?? MSSession()
         let messageCaption = NSLocalizedString("Let's play a Quizlet game.", comment: "")
         
         let layout = MSMessageTemplateLayout()
         layout.image = UIImage(named: "quizlet.png")
-        layout.imageTitle = "\(setTitle) by \(setAuthor)"
+        layout.imageTitle = "\(quiz.setTitle) by \(quiz.setAuthor)"
         layout.caption = messageCaption
-        layout.subcaption = "\(term_count) terms"
+        layout.subcaption = "\(quiz.term_count) terms"
         
         var components = URLComponents()
-        let queryItems = [URLQueryItem(name: "setID", value: String(setID)), URLQueryItem(name: "questionNumber", value: String(questionNumber)), URLQueryItem(name: "numberCorrect", value: String(numberCorrect))]
+        let queryItems = [URLQueryItem(name: "setID", value: String(quiz.setID)), URLQueryItem(name: "questionNumber", value: String(quiz.questionNumber)), URLQueryItem(name: "numberCorrect", value: String(quiz.numberCorrect))]
         components.queryItems = queryItems
         
         let message = MSMessage(session: session)
@@ -118,7 +128,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
     @IBAction func setButtonPressed(_ sender: UIButton) {
         // Prints the ID of the button pressed. Each button has a tag from 1-10. It subtracts 1 because indexes go from 0-9.
         print(buttonSetIDs[sender.tag - 1]!)
-        composeMessage(setTitle: buttonSetTitles[sender.tag - 1]!, setAuthor: buttonSetAuthors[sender.tag - 1]!, term_count: buttonSetTermCounts[sender.tag - 1]!, setID: buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0)
+        let quiz = Quiz(setTitle: buttonSetTitles[sender.tag - 1]!, setAuthor: buttonSetAuthors[sender.tag - 1]!, term_count: buttonSetTermCounts[sender.tag - 1]!, setID: buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0, opponentLastCorrect: nil)
+        composeMessage(quiz: quiz)
     }
     
     func searchBarSearchButtonClicked(_ searchBox: UISearchBar)  {
