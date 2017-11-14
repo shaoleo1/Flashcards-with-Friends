@@ -23,10 +23,14 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBOutlet weak var buttonSetEight: UIButton!
     @IBOutlet weak var buttonSetNine: UIButton!
     @IBOutlet weak var buttonSetTen: UIButton!
+    @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var termLabel: UILabel!
     @IBOutlet weak var definitionTextBox: UITextField!
+    @IBOutlet weak var sendButton: UIButton!
     
-    var currentTermDefinition = ""
+    private var currentTermDefinition = ""
+    private var numberCorrect = 0
+    private var questionNumber = 1
     
     // Declares an array of the study set IDs, titles, authors, and term counts corresponding to the appropriate buttons for looping.
     var buttonSetIDs = [Int?](repeating: nil, count: 10)
@@ -100,6 +104,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                         // Prints 'term' - 'definition'.
                                         print("\(term) - \(definition)")
                                         self.currentTermDefinition = definition
+                                        self.numberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "numberCorrect")!)!
+                                        self.questionNumber = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)!
                                         // Uses the main thread--required for UI changes.
                                         DispatchQueue.main.async() {
                                             // Sets the term label to the term we just got and makes the table and text box visible.
@@ -180,6 +186,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                 if let definition = currentTerm["definition"] as? String {
                                     // Prints 'term' - 'definition'.
                                     print("\(term) - \(definition)")
+                                    self.currentTermDefinition = definition
+                                    self.numberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "numberCorrect")!)!
+                                    self.questionNumber = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)!
                                     // Uses the main thread--required for UI changes.
                                     DispatchQueue.main.async() {
                                         // Sets the term label to the term we just got and makes the table and text box visible.
@@ -295,10 +304,17 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         definitionTextBox.resignFirstResponder()
         
         if(definitionTextBox.text?.lowercased() == currentTermDefinition.lowercased()) {
-            termLabel.text = "Correct!"
+            numberCorrect += 1
+            scoreLabel.textColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            scoreLabel.text = "Correct! - \(String(Int((Double(numberCorrect) / Double(questionNumber)).rounded() * 100)))%"
         } else {
-            termLabel.text = "Wrong!"
+            scoreLabel.textColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
+            scoreLabel.text = "Wrong! - \(String(Int((Double(numberCorrect) / Double(questionNumber)).rounded() * 100)))%"
+            definitionTextBox.text = "You put: \(definitionTextBox.text!) - Correct definition: \(currentTermDefinition)"
         }
+        definitionTextBox.isUserInteractionEnabled = false
+        scoreLabel.isHidden = false
+        sendButton.isHidden = false
         
         return true
     }
