@@ -9,7 +9,7 @@
 import UIKit
 import Messages
 
-class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
+class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, UITextFieldDelegate {
     
     // Outlets of the screen elements such as buttons, text boxes, search bars, and labels. These are variables connected to the storyboard that we can use to access these elements on the screen.
     @IBOutlet weak var searchBox: UISearchBar!
@@ -26,6 +26,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
     @IBOutlet weak var termLabel: UILabel!
     @IBOutlet weak var definitionTextBox: UITextField!
     
+    var currentTermDefinition = ""
+    
     // Declares an array of the study set IDs, titles, authors, and term counts corresponding to the appropriate buttons for looping.
     var buttonSetIDs = [Int?](repeating: nil, count: 10)
     var buttonSetTitles = [String?](repeating: nil, count: 10)
@@ -36,6 +38,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         searchBox.delegate = self
+        definitionTextBox.delegate = self
+        
+        definitionTextBox.returnKeyType = UIReturnKeyType.go
     }
     
     override func didReceiveMemoryWarning() {
@@ -94,6 +99,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
                                     if let definition = currentTerm["definition"] as? String {
                                         // Prints 'term' - 'definition'.
                                         print("\(term) - \(definition)")
+                                        self.currentTermDefinition = definition
                                         // Uses the main thread--required for UI changes.
                                         DispatchQueue.main.async() {
                                             // Sets the term label to the term we just got and makes the table and text box visible.
@@ -283,6 +289,18 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate {
         let quiz = Quiz(setTitle: buttonSetTitles[sender.tag - 1]!, setAuthor: buttonSetAuthors[sender.tag - 1]!, term_count: buttonSetTermCounts[sender.tag - 1]!, setID: buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0, opponentLastCorrect: nil)
         // Calls the composeMessage function with the 'quiz'.
         composeMessage(quiz: quiz)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        definitionTextBox.resignFirstResponder()
+        
+        if(definitionTextBox.text?.lowercased() == currentTermDefinition.lowercased()) {
+            termLabel.text = "Correct!"
+        } else {
+            termLabel.text = "Wrong!"
+        }
+        
+        return true
     }
     
     func searchBarSearchButtonClicked(_ searchBox: UISearchBar)  {
