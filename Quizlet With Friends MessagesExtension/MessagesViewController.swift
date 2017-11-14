@@ -24,13 +24,19 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBOutlet weak var buttonSetNine: UIButton!
     @IBOutlet weak var buttonSetTen: UIButton!
     @IBOutlet weak var scoreLabel: UILabel!
-    @IBOutlet weak var termLabel: UILabel!
-    @IBOutlet weak var definitionTextBox: UITextField!
+    @IBOutlet weak var definitionLabel: UILabel!
+    @IBOutlet weak var termTextBox: UITextField!
     @IBOutlet weak var sendButton: UIButton!
     
+    private var setTitle = ""
+    private var setAuthor = ""
+    private var term_count = 0
+    private var setID = 0
     private var currentTermDefinition = ""
     private var numberCorrect = 0
     private var questionNumber = 1
+    private var opponentLastCorrect: Bool?
+    private var originalSender: UUID? = nil
     
     // Declares an array of the study set IDs, titles, authors, and term counts corresponding to the appropriate buttons for looping.
     var buttonSetIDs = [Int?](repeating: nil, count: 10)
@@ -42,9 +48,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         searchBox.delegate = self
-        definitionTextBox.delegate = self
+        termTextBox.delegate = self
         
-        definitionTextBox.returnKeyType = UIReturnKeyType.go
+        termTextBox.returnKeyType = UIReturnKeyType.go
     }
     
     override func didReceiveMemoryWarning() {
@@ -101,17 +107,22 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                 if let term = currentTerm["term"] as? String {
                                     // Looks up the definition and saves it into the variable 'definition'.
                                     if let definition = currentTerm["definition"] as? String {
-                                        // Prints 'term' - 'definition'.
-                                        print("\(term) - \(definition)")
-                                        self.currentTermDefinition = definition
+                                        // Prints 'definition' - 'term'.
+                                        print("\(definition) - \(term)")
+                                        self.setTitle = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setTitle")!
+                                        self.setAuthor = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setAuthor")!
+                                        self.term_count = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "term_count")!)!
+                                        self.setID = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setID")!)!
+                                        self.currentTermDefinition = term
                                         self.numberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "numberCorrect")!)!
                                         self.questionNumber = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)!
+                                        self.originalSender = UUID(uuidString: self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "originalSender")!)
                                         // Uses the main thread--required for UI changes.
                                         DispatchQueue.main.async() {
                                             // Sets the term label to the term we just got and makes the table and text box visible.
-                                            self.termLabel.text = term
-                                            self.termLabel.isHidden = false
-                                            self.definitionTextBox.isHidden = false
+                                            self.definitionLabel.text = definition
+                                            self.definitionLabel.isHidden = false
+                                            self.termTextBox.isHidden = false
                                         }
                                         // It will then iterate through the for loop again until all terms have been looped through.
                                     }
@@ -186,15 +197,20 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                 if let definition = currentTerm["definition"] as? String {
                                     // Prints 'term' - 'definition'.
                                     print("\(term) - \(definition)")
-                                    self.currentTermDefinition = definition
+                                    self.setTitle = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setTitle")!
+                                    self.setAuthor = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setAuthor")!
+                                    self.term_count = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "term_count")!)!
+                                    self.setID = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setID")!)!
+                                    self.currentTermDefinition = term
                                     self.numberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "numberCorrect")!)!
                                     self.questionNumber = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)!
+                                    self.originalSender = UUID(uuidString: self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "originalSender")!)
                                     // Uses the main thread--required for UI changes.
                                     DispatchQueue.main.async() {
                                         // Sets the term label to the term we just got and makes the table and text box visible.
-                                        self.termLabel.text = term
-                                        self.termLabel.isHidden = false
-                                        self.definitionTextBox.isHidden = false
+                                        self.definitionLabel.text = definition
+                                        self.definitionLabel.isHidden = false
+                                        self.termTextBox.isHidden = false
                                     }
                                     // It will then iterate through the for loop again until all terms have been looped through.
                                 }
@@ -245,7 +261,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         let setID: Int
         var questionNumber: Int
         var numberCorrect: Int
-        var opponentLastCorrect: Bool?
+        let originalSender: UUID
     }
     
     // Function to check if the user that selected the message is the same as the user that sent it. Returns a boolean.
@@ -261,8 +277,12 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
         // Creates a variable 'session' with the selected message's session.
         let session = conversation.selectedMessage?.session ?? MSSession()
-        // Creates a variable 'messageCaption' with the caption of the message.
-        let messageCaption = NSLocalizedString("Let's play a Quizlet game.", comment: "")
+        var messageCaption = NSLocalizedString("Let's play a Quizlet game.", comment: "")
+        if (opponentLastCorrect == true) {
+            messageCaption = NSLocalizedString("I got '\(String(describing: self.definitionLabel.text!))' right.", comment: "")
+        } else if (opponentLastCorrect == false) {
+            messageCaption = NSLocalizedString("I got '\(String(describing: self.definitionLabel.text!))' wrong.", comment: "")
+        }
         
         // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
         let layout = MSMessageTemplateLayout()
@@ -273,7 +293,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         
         // Creates a variable 'components' that is a URLComponents object and creates a variable 'queryItems' with the key-value pairs for the URl query. Then it sets the component query items equal to that.
         var components = URLComponents()
-        let queryItems = [URLQueryItem(name: "setID", value: String(quiz.setID)), URLQueryItem(name: "questionNumber", value: String(quiz.questionNumber)), URLQueryItem(name: "numberCorrect", value: String(quiz.numberCorrect))]
+        let queryItems = [URLQueryItem(name: "setTitle", value: quiz.setTitle), URLQueryItem(name: "setAuthor", value: quiz.setAuthor), URLQueryItem(name: "term_count", value: String(quiz.term_count)), URLQueryItem(name: "setID", value: String(quiz.setID)), URLQueryItem(name: "questionNumber", value: String(quiz.questionNumber)), URLQueryItem(name: "numberCorrect", value: String(quiz.numberCorrect)), URLQueryItem(name: "originalSender", value: String(describing: quiz.originalSender))]
         components.queryItems = queryItems
         
         // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
@@ -289,32 +309,43 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                 print(error)
             }
         }
+        
+        requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
     }
 
     @IBAction func setButtonPressed(_ sender: UIButton) {
         // Prints the ID of the button pressed. Each button has a tag from 1-10. It subtracts 1 because indexes go from 0-9.
         print(buttonSetIDs[sender.tag - 1]!)
         // Creates a Quiz structure containing all the data necessary.
-        let quiz = Quiz(setTitle: buttonSetTitles[sender.tag - 1]!, setAuthor: buttonSetAuthors[sender.tag - 1]!, term_count: buttonSetTermCounts[sender.tag - 1]!, setID: buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0, opponentLastCorrect: nil)
+        guard let conversation = activeConversation else { fatalError("Expected a conversation") }
+        let quiz = Quiz(setTitle: buttonSetTitles[sender.tag - 1]!, setAuthor: buttonSetAuthors[sender.tag - 1]!, term_count: buttonSetTermCounts[sender.tag - 1]!, setID: buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0, originalSender: conversation.localParticipantIdentifier)
         // Calls the composeMessage function with the 'quiz'.
         composeMessage(quiz: quiz)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        definitionTextBox.resignFirstResponder()
+        termTextBox.resignFirstResponder()
         
-        if(definitionTextBox.text?.lowercased() == currentTermDefinition.lowercased()) {
+        if(termTextBox.text?.lowercased() == currentTermDefinition.lowercased()) {
             numberCorrect += 1
             scoreLabel.textColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
-            scoreLabel.text = "Correct! - \(String(Int((Double(numberCorrect) / Double(questionNumber)).rounded() * 100)))%"
+            scoreLabel.text = "Correct! - \(String(Int((Double(numberCorrect) / Double(questionNumber) * 100).rounded())))%"
+            opponentLastCorrect = true
         } else {
             scoreLabel.textColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
-            scoreLabel.text = "Wrong! - \(String(Int((Double(numberCorrect) / Double(questionNumber)).rounded() * 100)))%"
-            definitionTextBox.text = "You put: \(definitionTextBox.text!) - Correct definition: \(currentTermDefinition)"
+            scoreLabel.text = "Wrong! - \(String(Int((Double(numberCorrect) / Double(questionNumber) * 100).rounded())))%"
+            termTextBox.text = "You put: \(termTextBox.text!) - Correct term: \(currentTermDefinition)"
+            opponentLastCorrect = false
         }
-        definitionTextBox.isUserInteractionEnabled = false
+        termTextBox.isUserInteractionEnabled = false
         scoreLabel.isHidden = false
         sendButton.isHidden = false
+        
+        guard let conversation = activeConversation else { return false }
+        if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
+        
+        let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, originalSender: self.originalSender!)
+        composeMessage(quiz: quiz)
         
         return true
     }
@@ -389,5 +420,10 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         })
         task.resume()
     }
-
+    
+    @IBAction func sendButtonPressed(_ sender: UIButton) {
+        let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber + 1, numberCorrect: self.numberCorrect, originalSender: self.originalSender!)
+        composeMessage(quiz: quiz)
+    }
+    
 }
