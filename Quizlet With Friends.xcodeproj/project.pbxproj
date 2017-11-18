@@ -16,7 +16,7 @@
 		162538671FB60E010067EC67 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 162538661FB60E010067EC67 /* Assets.xcassets */; };
 		2A2DC3801FC0E5ED00739A01 /* quizletRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A2DC37F1FC0E5EC00739A01 /* quizletRed.png */; };
 		2A2DC3821FC0E5F300739A01 /* quizletGreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A2DC3811FC0E5F200739A01 /* quizletGreen.png */; };
-		2A2DC38A1FC0E98A00739A01 /* quizlet.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A2DC3891FC0E98A00739A01 /* quizlet.png */; };
+		2A2DC38C1FC0ED3000739A01 /* quizlet.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A2DC38B1FC0ED3000739A01 /* quizlet.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +56,7 @@
 		162538681FB60E010067EC67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2A2DC37F1FC0E5EC00739A01 /* quizletRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quizletRed.png; sourceTree = "<group>"; };
 		2A2DC3811FC0E5F200739A01 /* quizletGreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quizletGreen.png; sourceTree = "<group>"; };
-		2A2DC3891FC0E98A00739A01 /* quizlet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quizlet.png; sourceTree = "<group>"; };
+		2A2DC38B1FC0ED3000739A01 /* quizlet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quizlet.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,9 +110,9 @@
 		162538601FB60E010067EC67 /* Quizlet With Friends MessagesExtension */ = {
 			isa = PBXGroup;
 			children = (
+				2A2DC38B1FC0ED3000739A01 /* quizlet.png */,
 				2A2DC3811FC0E5F200739A01 /* quizletGreen.png */,
 				2A2DC37F1FC0E5EC00739A01 /* quizletRed.png */,
-				2A2DC3891FC0E98A00739A01 /* quizlet.png */,
 				160DADA31FB61D090051ADA9 /* search.png */,
 				162538611FB60E010067EC67 /* MessagesViewController.swift */,
 				162538631FB60E010067EC67 /* MainInterface.storyboard */,
@@ -213,8 +213,8 @@
 			files = (
 				2A2DC3821FC0E5F300739A01 /* quizletGreen.png in Resources */,
 				162538671FB60E010067EC67 /* Assets.xcassets in Resources */,
+				2A2DC38C1FC0ED3000739A01 /* quizlet.png in Resources */,
 				160DADA41FB61D090051ADA9 /* search.png in Resources */,
-				2A2DC38A1FC0E98A00739A01 /* quizlet.png in Resources */,
 				2A2DC3801FC0E5ED00739A01 /* quizletRed.png in Resources */,
 				162538651FB60E010067EC67 /* MainInterface.storyboard in Resources */,
 			);
