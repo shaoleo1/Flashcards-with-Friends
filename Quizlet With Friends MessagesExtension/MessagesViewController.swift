@@ -317,7 +317,13 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         
         // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
         let layout = MSMessageTemplateLayout()
-        layout.image = UIImage(named: "quizlet.png")
+        if(self.opponentLastCorrect)!{
+            layout.image = UIImage(named: "quizletGreen.png")
+        } else if (!self.opponentLastCorrect!) {
+            layout.image = UIImage(named: "quizletRed.png")
+        } else {
+            layout.image = UIImage(named: "quizlet.png")
+        }
         layout.imageTitle = "\(quiz.setTitle) by \(quiz.setAuthor)"
         layout.caption = messageCaption
         layout.subcaption = "\(quiz.term_count) terms"
