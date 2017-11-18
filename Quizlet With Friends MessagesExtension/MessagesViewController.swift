@@ -23,10 +23,13 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBOutlet weak var buttonSetEight: UIButton!
     @IBOutlet weak var buttonSetNine: UIButton!
     @IBOutlet weak var buttonSetTen: UIButton!
-    @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var definitionLabel: UILabel!
     @IBOutlet weak var termTextBox: UITextField!
     @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var opponentScoreLabel: UILabel!
+    @IBOutlet weak var rightWrongResult: UILabel!
+    @IBOutlet weak var myScoreLabel: UILabel!
+    
     
     private var setTitle = ""
     private var setAuthor = ""
@@ -34,6 +37,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     private var setID = 0
     private var currentTermDefinition = ""
     private var numberCorrect = 0
+    private var opponentNumberCorrect = 0
     private var questionNumber = 1
     private var opponentLastCorrect: Bool?
     private var originalSender: UUID? = nil
@@ -61,13 +65,115 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     // MARK: - Conversation Handling
     
     override func willBecomeActive(with conversation: MSConversation) {
-        // Called when the extension is about to move from the inactive to active state.
-        // This will happen when the extension is about to present UI.
+        if(!isSenderSameAsRecipient()) {
+            // Called when the extension is about to move from the inactive to active state.
+            // This will happen when the extension is about to present UI.
+            
+            // Use this method to configure the extension and restore previously stored state.
+            
+            // If there is a selectedMessage (and we're not just launching the app to send a new quiz to someone), it will create a variable 'message' that represents the selected message.
+            if let message = conversation.selectedMessage {
+                // Sets all the buttons and the search box to hidden since we aren't searching for a study set; we're playing a game.
+                searchBox.isHidden = true
+                buttonSetOne.isHidden = true
+                buttonSetTwo.isHidden = true
+                buttonSetThree.isHidden = true
+                buttonSetFour.isHidden = true
+                buttonSetFive.isHidden = true
+                buttonSetSix.isHidden = true
+                buttonSetSeven.isHidden = true
+                buttonSetEight.isHidden = true
+                buttonSetNine.isHidden = true
+                buttonSetTen.isHidden = true
+                
+                // Creates a variable 'setID' that is the study set ID passed through the URL parameters of the message selected.
+                let setID = getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setID")
+                // Creates a 'request' variable with the URL of the Quizlet API. Includes the set ID in the URL with the client id to gain access.
+                var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/sets/" + setID! + "?client_id=bFxdXkTKvW")!)
+                // Sets the http method to GET which means GETting data FROM the API. There are two methods, GET and POST. POST means POSTing data TO the API. In this case, we're using GET.
+                request.httpMethod = "GET"
+                // Sets the file type that the data will be retrieved to be JSON, which is the standard format.
+                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                
+                // Starts the HTTP session (connects to the API URL with the search query and GETs the data).
+                let session = URLSession.shared
+                let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+                    print(response!)
+                    do {
+                        // Converts and saves the returned data into a variable called 'json' in appropriate JSON formatting.
+                        let json = try JSONSerialization.jsonObject(with: data!, options: [])
+                        // Creates a dictionary from the JSON file to look up the value for the key given.
+                        if let dictionary = json as? [String: Any] {
+                            // Creates an array of the returned terms.
+                            if let nestedArray = dictionary["terms"] as? [Any] {
+                                // Creates a dictionary of the current term details (e.g. term, definition, term number).
+                                if let currentTerm = nestedArray[Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)! - 1] as? [String: Any] {
+                                    // Looks up the term and saves it into the variable 'term'.
+                                    if let term = currentTerm["term"] as? String {
+                                        // Looks up the definition and saves it into the variable 'definition'.
+                                        if let definition = currentTerm["definition"] as? String {
+                                            // Prints 'definition' - 'term'.
+                                            print("\(definition) - \(term)")
+                                            self.setTitle = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setTitle")!
+                                            self.setAuthor = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setAuthor")!
+                                            self.term_count = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "term_count")!)!
+                                            self.setID = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setID")!)!
+                                            self.currentTermDefinition = term
+                                            self.numberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "numberCorrect")!)!
+                                            self.opponentNumberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "opponentNumberCorrect")!)!
+                                            self.questionNumber = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)!
+                                            self.originalSender = UUID(uuidString: self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "originalSender")!)
+                                            // Uses the main thread--required for UI changes.
+                                            guard let conversation = self.activeConversation else { fatalError("Expected a conversation.") }
+                                            DispatchQueue.main.async() {
+                                                // Sets the term label to the term we just got and makes the table and text box visible.
+                                                self.definitionLabel.text = definition
+                                                self.definitionLabel.isHidden = false
+                                                self.termTextBox.isHidden = false
+                                                self.myScoreLabel.isHidden = false
+                                                self.opponentScoreLabel.isHidden = false
+                                                if(self.originalSender == conversation.localParticipantIdentifier) {
+                                                    self.myScoreLabel.text = String(self.numberCorrect)
+                                                    self.opponentScoreLabel.text = String(self.opponentNumberCorrect)
+                                                } else {
+                                                    self.myScoreLabel.text = String(self.opponentNumberCorrect)
+                                                    self.opponentScoreLabel.text = String(self.numberCorrect)
+                                                }
+                                            }
+                                            // It will then iterate through the for loop again until all terms have been looped through.
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch {
+                        print("error")
+                    }
+                })
+                task.resume()
+            }
+        }
+    }
+    
+    override func didResignActive(with conversation: MSConversation) {
+        // Called when the extension is about to move from the active to inactive state.
+        // This will happen when the user dissmises the extension, changes to a different
+        // conversation or quits Messages.
         
-        // Use this method to configure the extension and restore previously stored state.
+        // Use this method to release shared resources, save user data, invalidate timers,
+        // and store enough state information to restore your extension to its current state
+        // in case it is terminated later.
+    }
+   
+    override func didReceive(_ message: MSMessage, conversation: MSConversation) {
+        // Called when a message arrives that was generated by another instance of this
+        // extension on a remote device.
         
-        // If there is a selectedMessage (and we're not just launching the app to send a new quiz to someone), it will create a variable 'message' that represents the selected message.
-        if let message = conversation.selectedMessage {
+        // Use this method to trigger UI updates in response to the message.
+    }
+    
+    override func didSelect(_ message: MSMessage, conversation: MSConversation) {
+        if(!isSenderSameAsRecipient()) {
             // Sets all the buttons and the search box to hidden since we aren't searching for a study set; we're playing a game.
             searchBox.isHidden = true
             buttonSetOne.isHidden = true
@@ -107,22 +213,33 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                 if let term = currentTerm["term"] as? String {
                                     // Looks up the definition and saves it into the variable 'definition'.
                                     if let definition = currentTerm["definition"] as? String {
-                                        // Prints 'definition' - 'term'.
-                                        print("\(definition) - \(term)")
+                                        // Prints 'term' - 'definition'.
+                                        print("\(term) - \(definition)")
                                         self.setTitle = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setTitle")!
                                         self.setAuthor = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setAuthor")!
                                         self.term_count = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "term_count")!)!
                                         self.setID = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setID")!)!
                                         self.currentTermDefinition = term
                                         self.numberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "numberCorrect")!)!
+                                        self.opponentNumberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "opponentNumberCorrect")!)!
                                         self.questionNumber = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)!
                                         self.originalSender = UUID(uuidString: self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "originalSender")!)
                                         // Uses the main thread--required for UI changes.
+                                        guard let conversation = self.activeConversation else { fatalError("Expected a conversation.") }
                                         DispatchQueue.main.async() {
                                             // Sets the term label to the term we just got and makes the table and text box visible.
                                             self.definitionLabel.text = definition
                                             self.definitionLabel.isHidden = false
                                             self.termTextBox.isHidden = false
+                                            self.myScoreLabel.isHidden = false
+                                            self.opponentScoreLabel.isHidden = false
+                                            if(self.originalSender == conversation.localParticipantIdentifier) {
+                                                self.myScoreLabel.text = String(self.numberCorrect)
+                                                self.opponentScoreLabel.text = String(self.opponentNumberCorrect)
+                                            } else {
+                                                self.myScoreLabel.text = String(self.opponentNumberCorrect)
+                                                self.opponentScoreLabel.text = String(self.numberCorrect)
+                                            }
                                         }
                                         // It will then iterate through the for loop again until all terms have been looped through.
                                     }
@@ -137,93 +254,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
             task.resume()
         }
     }
-    
-    override func didResignActive(with conversation: MSConversation) {
-        // Called when the extension is about to move from the active to inactive state.
-        // This will happen when the user dissmises the extension, changes to a different
-        // conversation or quits Messages.
-        
-        // Use this method to release shared resources, save user data, invalidate timers,
-        // and store enough state information to restore your extension to its current state
-        // in case it is terminated later.
-    }
-   
-    override func didReceive(_ message: MSMessage, conversation: MSConversation) {
-        // Called when a message arrives that was generated by another instance of this
-        // extension on a remote device.
-        
-        // Use this method to trigger UI updates in response to the message.
-    }
-    
-    override func didSelect(_ message: MSMessage, conversation: MSConversation) {
-        // Sets all the buttons and the search box to hidden since we aren't searching for a study set; we're playing a game.
-        searchBox.isHidden = true
-        buttonSetOne.isHidden = true
-        buttonSetTwo.isHidden = true
-        buttonSetThree.isHidden = true
-        buttonSetFour.isHidden = true
-        buttonSetFive.isHidden = true
-        buttonSetSix.isHidden = true
-        buttonSetSeven.isHidden = true
-        buttonSetEight.isHidden = true
-        buttonSetNine.isHidden = true
-        buttonSetTen.isHidden = true
-        
-        // Creates a variable 'setID' that is the study set ID passed through the URL parameters of the message selected.
-        let setID = getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setID")
-        // Creates a 'request' variable with the URL of the Quizlet API. Includes the set ID in the URL with the client id to gain access.
-        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/sets/" + setID! + "?client_id=bFxdXkTKvW")!)
-        // Sets the http method to GET which means GETting data FROM the API. There are two methods, GET and POST. POST means POSTing data TO the API. In this case, we're using GET.
-        request.httpMethod = "GET"
-        // Sets the file type that the data will be retrieved to be JSON, which is the standard format.
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        // Starts the HTTP session (connects to the API URL with the search query and GETs the data).
-        let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            print(response!)
-            do {
-                // Converts and saves the returned data into a variable called 'json' in appropriate JSON formatting.
-                let json = try JSONSerialization.jsonObject(with: data!, options: [])
-                // Creates a dictionary from the JSON file to look up the value for the key given.
-                if let dictionary = json as? [String: Any] {
-                    // Creates an array of the returned terms.
-                    if let nestedArray = dictionary["terms"] as? [Any] {
-                        // Creates a dictionary of the current term details (e.g. term, definition, term number).
-                        if let currentTerm = nestedArray[Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)! - 1] as? [String: Any] {
-                            // Looks up the term and saves it into the variable 'term'.
-                            if let term = currentTerm["term"] as? String {
-                                // Looks up the definition and saves it into the variable 'definition'.
-                                if let definition = currentTerm["definition"] as? String {
-                                    // Prints 'term' - 'definition'.
-                                    print("\(term) - \(definition)")
-                                    self.setTitle = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setTitle")!
-                                    self.setAuthor = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setAuthor")!
-                                    self.term_count = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "term_count")!)!
-                                    self.setID = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setID")!)!
-                                    self.currentTermDefinition = term
-                                    self.numberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "numberCorrect")!)!
-                                    self.questionNumber = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)!
-                                    self.originalSender = UUID(uuidString: self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "originalSender")!)
-                                    // Uses the main thread--required for UI changes.
-                                    DispatchQueue.main.async() {
-                                        // Sets the term label to the term we just got and makes the table and text box visible.
-                                        self.definitionLabel.text = definition
-                                        self.definitionLabel.isHidden = false
-                                        self.termTextBox.isHidden = false
-                                    }
-                                    // It will then iterate through the for loop again until all terms have been looped through.
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch {
-                print("error")
-            }
-        })
-        task.resume()
-        }
     
     override func didStartSending(_ message: MSMessage, conversation: MSConversation) {
         // Called when the user taps the send button.
@@ -261,6 +291,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         let setID: Int
         var questionNumber: Int
         var numberCorrect: Int
+        var opponentNumberCorrect: Int
         let originalSender: UUID
     }
     
@@ -293,7 +324,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         
         // Creates a variable 'components' that is a URLComponents object and creates a variable 'queryItems' with the key-value pairs for the URl query. Then it sets the component query items equal to that.
         var components = URLComponents()
-        let queryItems = [URLQueryItem(name: "setTitle", value: quiz.setTitle), URLQueryItem(name: "setAuthor", value: quiz.setAuthor), URLQueryItem(name: "term_count", value: String(quiz.term_count)), URLQueryItem(name: "setID", value: String(quiz.setID)), URLQueryItem(name: "questionNumber", value: String(quiz.questionNumber)), URLQueryItem(name: "numberCorrect", value: String(quiz.numberCorrect)), URLQueryItem(name: "originalSender", value: String(describing: quiz.originalSender))]
+        let queryItems = [URLQueryItem(name: "setTitle", value: quiz.setTitle), URLQueryItem(name: "setAuthor", value: quiz.setAuthor), URLQueryItem(name: "term_count", value: String(quiz.term_count)), URLQueryItem(name: "setID", value: String(quiz.setID)), URLQueryItem(name: "questionNumber", value: String(quiz.questionNumber)), URLQueryItem(name: "numberCorrect", value: String(quiz.numberCorrect)), URLQueryItem(name: "opponentNumberCorrect", value: String(quiz.opponentNumberCorrect)), URLQueryItem(name: "originalSender", value: String(describing: quiz.originalSender))]
         components.queryItems = queryItems
         
         // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
@@ -318,7 +349,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         print(buttonSetIDs[sender.tag - 1]!)
         // Creates a Quiz structure containing all the data necessary.
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
-        let quiz = Quiz(setTitle: buttonSetTitles[sender.tag - 1]!, setAuthor: buttonSetAuthors[sender.tag - 1]!, term_count: buttonSetTermCounts[sender.tag - 1]!, setID: buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0, originalSender: conversation.localParticipantIdentifier)
+        let quiz = Quiz(setTitle: buttonSetTitles[sender.tag - 1]!, setAuthor: buttonSetAuthors[sender.tag - 1]!, term_count: buttonSetTermCounts[sender.tag - 1]!, setID: buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0, opponentNumberCorrect: 0, originalSender: conversation.localParticipantIdentifier)
         // Calls the composeMessage function with the 'quiz'.
         composeMessage(quiz: quiz)
     }
@@ -326,25 +357,40 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         termTextBox.resignFirstResponder()
         
+        guard let conversation = activeConversation else { return false }
         if(termTextBox.text?.lowercased() == currentTermDefinition.lowercased()) {
-            numberCorrect += 1
-            scoreLabel.textColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
-            scoreLabel.text = "Correct! - \(String(Int((Double(numberCorrect) / Double(questionNumber) * 100).rounded())))%"
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                numberCorrect += 1
+                rightWrongResult.text = "Correct!"
+                myScoreLabel.text = String(numberCorrect)
+            } else {
+                opponentNumberCorrect += 1
+                rightWrongResult.text = "Correct!"
+                myScoreLabel.text = String(opponentNumberCorrect)
+            }
+            rightWrongResult.textColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
             opponentLastCorrect = true
         } else {
-            scoreLabel.textColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
-            scoreLabel.text = "Wrong! - \(String(Int((Double(numberCorrect) / Double(questionNumber) * 100).rounded())))%"
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                rightWrongResult.text = "Wrong!"
+                myScoreLabel.text = String(numberCorrect)
+            } else {
+                rightWrongResult.text = "Wrong!"
+                myScoreLabel.text = String(opponentNumberCorrect)
+            }
+            rightWrongResult.textColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
             termTextBox.text = "You put: \(termTextBox.text!) - Correct term: \(currentTermDefinition)"
             opponentLastCorrect = false
         }
         termTextBox.isUserInteractionEnabled = false
-        scoreLabel.isHidden = false
+        opponentScoreLabel.isHidden = false
+        rightWrongResult.isHidden = false
+        myScoreLabel.isHidden = false
         sendButton.isHidden = false
         
-        guard let conversation = activeConversation else { return false }
         if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
         
-        let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, originalSender: self.originalSender!)
+        let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
         composeMessage(quiz: quiz)
         
         return true
@@ -422,7 +468,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
     
     @IBAction func sendButtonPressed(_ sender: UIButton) {
-        let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber + 1, numberCorrect: self.numberCorrect, originalSender: self.originalSender!)
+        let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber + 1, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
         composeMessage(quiz: quiz)
     }
     
