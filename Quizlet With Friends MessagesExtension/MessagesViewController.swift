@@ -29,6 +29,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBOutlet weak var opponentScoreLabel: UILabel!
     @IBOutlet weak var rightWrongResult: UILabel!
     @IBOutlet weak var myScoreLabel: UILabel!
+    @IBOutlet weak var progressBar: UIProgressView!
     
     
     private var setTitle = ""
@@ -132,6 +133,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                                 self.termTextBox.isHidden = false
                                                 self.myScoreLabel.isHidden = false
                                                 self.opponentScoreLabel.isHidden = false
+                                                self.progressBar.isHidden = false
+                                                self.progressBar.progress = Float(self.questionNumber) / Float(self.term_count)
                                                 if(self.originalSender == conversation.localParticipantIdentifier) {
                                                     self.myScoreLabel.text = String(self.numberCorrect)
                                                     self.opponentScoreLabel.text = String(self.opponentNumberCorrect)
@@ -233,6 +236,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                             self.termTextBox.isHidden = false
                                             self.myScoreLabel.isHidden = false
                                             self.opponentScoreLabel.isHidden = false
+                                            self.progressBar.isHidden = false
+                                            self.progressBar.progress = Float(self.questionNumber) / Float(self.term_count)
                                             if(self.originalSender == conversation.localParticipantIdentifier) {
                                                 self.myScoreLabel.text = String(self.numberCorrect)
                                                 self.opponentScoreLabel.text = String(self.opponentNumberCorrect)
@@ -367,21 +372,21 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         if(termTextBox.text?.lowercased() == currentTermDefinition.lowercased()) {
             if(self.originalSender == conversation.localParticipantIdentifier) {
                 numberCorrect += 1
-                rightWrongResult.text = "Correct!"
+                rightWrongResult.text = "Correct 🤑"
                 myScoreLabel.text = String(numberCorrect)
             } else {
                 opponentNumberCorrect += 1
-                rightWrongResult.text = "Correct!"
+                rightWrongResult.text = "Correct 🤑"
                 myScoreLabel.text = String(opponentNumberCorrect)
             }
             rightWrongResult.textColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
             opponentLastCorrect = true
         } else {
             if(self.originalSender == conversation.localParticipantIdentifier) {
-                rightWrongResult.text = "Wrong!"
+                rightWrongResult.text = "Wrong 😤"
                 myScoreLabel.text = String(numberCorrect)
             } else {
-                rightWrongResult.text = "Wrong!"
+                rightWrongResult.text = "Wrong 😤"
                 myScoreLabel.text = String(opponentNumberCorrect)
             }
             rightWrongResult.textColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)

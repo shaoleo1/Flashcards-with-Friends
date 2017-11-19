@@ -14,9 +14,9 @@
 		162538621FB60E010067EC67 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162538611FB60E010067EC67 /* MessagesViewController.swift */; };
 		162538651FB60E010067EC67 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 162538631FB60E010067EC67 /* MainInterface.storyboard */; };
 		162538671FB60E010067EC67 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 162538661FB60E010067EC67 /* Assets.xcassets */; };
-		2A47EAD21FC1122A00195634 /* quizlet.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A47EACF1FC1122A00195634 /* quizlet.png */; };
-		2A47EAD31FC1122A00195634 /* quizletGreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A47EAD01FC1122A00195634 /* quizletGreen.png */; };
-		2A47EAD41FC1122A00195634 /* quizletRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A47EAD11FC1122A00195634 /* quizletRed.png */; };
+		16D0A65E1FC15EE5007FEA66 /* quizlet.png in Resources */ = {isa = PBXBuildFile; fileRef = 16D0A65B1FC15EE5007FEA66 /* quizlet.png */; };
+		16D0A65F1FC15EE5007FEA66 /* quizletRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 16D0A65C1FC15EE5007FEA66 /* quizletRed.png */; };
+		16D0A6601FC15EE5007FEA66 /* quizletGreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 16D0A65D1FC15EE5007FEA66 /* quizletGreen.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,9 +54,9 @@
 		162538641FB60E010067EC67 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		162538661FB60E010067EC67 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		162538681FB60E010067EC67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2A47EACF1FC1122A00195634 /* quizlet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = quizlet.png; path = "../../../Desktop/Quizlet with Friends/quizlet.png"; sourceTree = "<group>"; };
-		2A47EAD01FC1122A00195634 /* quizletGreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = quizletGreen.png; path = "../../../Desktop/Quizlet with Friends/quizletGreen.png"; sourceTree = "<group>"; };
-		2A47EAD11FC1122A00195634 /* quizletRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = quizletRed.png; path = "../../../Desktop/Quizlet with Friends/quizletRed.png"; sourceTree = "<group>"; };
+		16D0A65B1FC15EE5007FEA66 /* quizlet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quizlet.png; sourceTree = "<group>"; };
+		16D0A65C1FC15EE5007FEA66 /* quizletRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quizletRed.png; sourceTree = "<group>"; };
+		16D0A65D1FC15EE5007FEA66 /* quizletGreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quizletGreen.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,9 +111,9 @@
 			isa = PBXGroup;
 			children = (
 				160DADA31FB61D090051ADA9 /* search.png */,
-				2A47EACF1FC1122A00195634 /* quizlet.png */,
-				2A47EAD01FC1122A00195634 /* quizletGreen.png */,
-				2A47EAD11FC1122A00195634 /* quizletRed.png */,
+				16D0A65B1FC15EE5007FEA66 /* quizlet.png */,
+				16D0A65D1FC15EE5007FEA66 /* quizletGreen.png */,
+				16D0A65C1FC15EE5007FEA66 /* quizletRed.png */,
 				162538611FB60E010067EC67 /* MessagesViewController.swift */,
 				162538631FB60E010067EC67 /* MainInterface.storyboard */,
 				162538661FB60E010067EC67 /* Assets.xcassets */,
@@ -211,12 +211,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A47EAD41FC1122A00195634 /* quizletRed.png in Resources */,
-				2A47EAD21FC1122A00195634 /* quizlet.png in Resources */,
+				16D0A6601FC15EE5007FEA66 /* quizletGreen.png in Resources */,
+				16D0A65E1FC15EE5007FEA66 /* quizlet.png in Resources */,
 				162538671FB60E010067EC67 /* Assets.xcassets in Resources */,
 				160DADA41FB61D090051ADA9 /* search.png in Resources */,
+				16D0A65F1FC15EE5007FEA66 /* quizletRed.png in Resources */,
 				162538651FB60E010067EC67 /* MainInterface.storyboard in Resources */,
-				2A47EAD31FC1122A00195634 /* quizletGreen.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

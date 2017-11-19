@@ -178,6 +178,9 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wzd-bg-dP5">
+                                <rect key="frame" x="16" y="111" width="288" height="2"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -186,6 +189,7 @@
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="30g-Dw-pqN" secondAttribute="trailing" id="2m0-3u-W1l"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="bottom" secondItem="h6S-k1-tKh" secondAttribute="bottom" constant="20" id="2mL-4g-P5a"/>
                             <constraint firstItem="WJi-wl-l9B" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" id="3V3-eW-SbQ"/>
+                            <constraint firstItem="Wzd-bg-dP5" firstAttribute="top" secondItem="YM8-GM-xo0" secondAttribute="bottom" constant="45" id="4ar-ST-gTm"/>
                             <constraint firstItem="kPi-2F-YzG" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="5sv-N9-UUd"/>
                             <constraint firstItem="YM8-GM-xo0" firstAttribute="leading" secondItem="07c-Kz-ctS" secondAttribute="trailing" constant="8" id="60y-KF-Erb"/>
                             <constraint firstItem="WJi-wl-l9B" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="6PV-33-fCp"/>
@@ -210,6 +214,7 @@
                             <constraint firstItem="sF1-6R-x6n" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" id="Tt9-Id-1xS"/>
                             <constraint firstItem="07c-Kz-ctS" firstAttribute="top" secondItem="LDy-ih-0nr" secondAttribute="top" constant="10" id="UKt-lO-F6u"/>
                             <constraint firstItem="A3v-Oa-OIz" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="UeM-BS-IPk"/>
+                            <constraint firstItem="Wzd-bg-dP5" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="UnF-Kp-pGt"/>
                             <constraint firstItem="sF1-6R-x6n" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="Uol-UC-wAb"/>
                             <constraint firstItem="qQY-on-8vh" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="Ux2-qJ-bP1"/>
                             <constraint firstItem="LwQ-XH-3Sg" firstAttribute="top" secondItem="WJi-wl-l9B" secondAttribute="bottom" constant="8" id="VFz-1s-qnL"/>
@@ -217,6 +222,7 @@
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="A3v-Oa-OIz" secondAttribute="trailing" id="WsL-55-dqW"/>
                             <constraint firstItem="R4D-s3-LfN" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="aft-kI-dAk"/>
                             <constraint firstItem="kPi-2F-YzG" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" id="b3I-z8-5EU"/>
+                            <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="Wzd-bg-dP5" secondAttribute="trailing" constant="16" id="bHq-rZ-Gkd"/>
                             <constraint firstItem="kPi-2F-YzG" firstAttribute="top" secondItem="A3v-Oa-OIz" secondAttribute="bottom" constant="8" id="bcw-xt-Psc"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="kPi-2F-YzG" secondAttribute="trailing" id="cI7-Tw-vzI"/>
                             <constraint firstItem="07c-Kz-ctS" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="8" id="ccU-dn-PZK"/>
@@ -263,6 +269,7 @@
                         <outlet property="definitionLabel" destination="qQY-on-8vh" id="IZx-L8-6Lf"/>
                         <outlet property="myScoreLabel" destination="drg-Bn-ejt" id="tfj-Pr-dbL"/>
                         <outlet property="opponentScoreLabel" destination="07c-Kz-ctS" id="Psw-7L-T7F"/>
+                        <outlet property="progressBar" destination="Wzd-bg-dP5" id="zy3-zL-VHf"/>
                         <outlet property="rightWrongResult" destination="YM8-GM-xo0" id="xZ6-aL-D8O"/>
                         <outlet property="searchBox" destination="Tt3-zF-1Bp" id="Xld-nr-vOC"/>
                         <outlet property="sendButton" destination="h6S-k1-tKh" id="dUk-4O-MZ9"/>
