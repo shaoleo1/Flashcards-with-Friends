@@ -30,7 +30,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBOutlet weak var rightWrongResult: UILabel!
     @IBOutlet weak var myScoreLabel: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
-    
+    @IBOutlet weak var opponentLabel: UILabel!
+    @IBOutlet weak var youLabel: UILabel!
     
     private var setTitle = ""
     private var setAuthor = ""
@@ -133,6 +134,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                                 self.termTextBox.isHidden = false
                                                 self.myScoreLabel.isHidden = false
                                                 self.opponentScoreLabel.isHidden = false
+                                                self.opponentLabel.isHidden = false
+                                                self.youLabel.isHidden = false
                                                 self.progressBar.isHidden = false
                                                 self.progressBar.progress = Float(self.questionNumber) / Float(self.term_count)
                                                 if(self.originalSender == conversation.localParticipantIdentifier) {
@@ -236,6 +239,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                             self.termTextBox.isHidden = false
                                             self.myScoreLabel.isHidden = false
                                             self.opponentScoreLabel.isHidden = false
+                                            self.opponentLabel.isHidden = false
+                                            self.youLabel.isHidden = false
                                             self.progressBar.isHidden = false
                                             self.progressBar.progress = Float(self.questionNumber) / Float(self.term_count)
                                             if(self.originalSender == conversation.localParticipantIdentifier) {
@@ -444,6 +449,11 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         return true
     }
     
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        requestPresentationStyle(MSMessagesAppPresentationStyle.expanded)
+        return true
+    }
+    
     func searchBarSearchButtonClicked(_ searchBox: UISearchBar)  {
         // Closes the keyboard
         searchBox.resignFirstResponder()
@@ -499,6 +509,46 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                                 buttons[index].isHidden = false
                                                 // Sets the button text.
                                                 buttons[index].setTitle("\(title) by \(author) - \(term_count) terms", for: .normal)
+                                                self.buttonSetOne.layer.cornerRadius = 10
+                                                self.buttonSetOne.layer.shadowOffset = CGSize(width: 5, height: 5)
+                                                self.buttonSetOne.layer.shadowRadius = 5
+                                                self.buttonSetOne.layer.shadowOpacity = 0.5
+                                                self.buttonSetTwo.layer.cornerRadius = 10
+                                                self.buttonSetTwo.layer.shadowOffset = CGSize(width: 5, height: 5)
+                                                self.buttonSetTwo.layer.shadowRadius = 5
+                                                self.buttonSetTwo.layer.shadowOpacity = 0.5
+                                                self.buttonSetThree.layer.cornerRadius = 10
+                                                self.buttonSetThree.layer.shadowOffset = CGSize(width: 5, height: 5)
+                                                self.buttonSetThree.layer.shadowRadius = 5
+                                                self.buttonSetThree.layer.shadowOpacity = 0.5
+                                                self.buttonSetFour.layer.cornerRadius = 10
+                                                self.buttonSetFour.layer.shadowOffset = CGSize(width: 5, height: 5)
+                                                self.buttonSetFour.layer.shadowRadius = 5
+                                                self.buttonSetFour.layer.shadowOpacity = 0.5
+                                                self.buttonSetFive.layer.cornerRadius = 10
+                                                self.buttonSetFive.layer.shadowOffset = CGSize(width: 5, height: 5)
+                                                self.buttonSetFive.layer.shadowRadius = 5
+                                                self.buttonSetFive.layer.shadowOpacity = 0.5
+                                                self.buttonSetSix.layer.cornerRadius = 10
+                                                self.buttonSetSix.layer.shadowOffset = CGSize(width: 5, height: 5)
+                                                self.buttonSetSix.layer.shadowRadius = 5
+                                                self.buttonSetSix.layer.shadowOpacity = 0.5
+                                                self.buttonSetSeven.layer.cornerRadius = 10
+                                                self.buttonSetSeven.layer.shadowOffset = CGSize(width: 5, height: 5)
+                                                self.buttonSetSeven.layer.shadowRadius = 5
+                                                self.buttonSetSeven.layer.shadowOpacity = 0.5
+                                                self.buttonSetEight.layer.cornerRadius = 10
+                                                self.buttonSetEight.layer.shadowOffset = CGSize(width: 5, height: 5)
+                                                self.buttonSetEight.layer.shadowRadius = 5
+                                                self.buttonSetEight.layer.shadowOpacity = 0.5
+                                                self.buttonSetNine.layer.cornerRadius = 10
+                                                self.buttonSetNine.layer.shadowOffset = CGSize(width: 5, height: 5)
+                                                self.buttonSetNine.layer.shadowRadius = 5
+                                                self.buttonSetNine.layer.shadowOpacity = 0.5
+                                                self.buttonSetTen.layer.cornerRadius = 10
+                                                self.buttonSetTen.layer.shadowOffset = CGSize(width: 5, height: 5)
+                                                self.buttonSetTen.layer.shadowRadius = 5
+                                                self.buttonSetTen.layer.shadowOpacity = 0.5
                                             }
                                             // It will then iterate through the for loop again until all objects have been looped through, which should be 10 times since we limited the results to a maximum of 10.
                                         }
