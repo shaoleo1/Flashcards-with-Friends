@@ -409,6 +409,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
             opponentLastCorrect = false
         }
         termTextBox.isUserInteractionEnabled = false
+        idkButton.isUserInteractionEnabled = false
         opponentScoreLabel.isHidden = false
         rightWrongResult.isHidden = false
         myScoreLabel.isHidden = false
@@ -576,6 +577,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
     
     @IBAction func idkButtonPressed(_ sender: UIButton) {
+        termTextBox.resignFirstResponder()
         mcButton1.isHidden = false
         mcButton2.isHidden = false
         mcButton3.isHidden = false
