@@ -76,7 +76,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     
     override func willBecomeActive(with conversation: MSConversation) {
         if let message = conversation.selectedMessage {
-        if(message.senderParticipantIdentifier != conversation.localParticipantIdentifier) {
+        if (message.senderParticipantIdentifier != conversation.localParticipantIdentifier && message.url != nil) {
             // Called when the extension is about to move from the inactive to active state.
             // This will happen when the extension is about to present UI.
             
@@ -188,7 +188,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
     
     override func didSelect(_ message: MSMessage, conversation: MSConversation) {
-        if(message.senderParticipantIdentifier != conversation.localParticipantIdentifier) {
+        if(message.senderParticipantIdentifier != conversation.localParticipantIdentifier  && message.url != nil) {
             // Sets all the buttons and the search box to hidden since we aren't searching for a study set; we're playing a game.
             searchBox.isHidden = true
             buttonSetOne.isHidden = true
@@ -384,7 +384,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         termTextBox.resignFirstResponder()
         
         guard let conversation = activeConversation else { return false }
-        if(termTextBox.text?.lowercased() == currentTermDefinition.lowercased()) {
+        if(termTextBox.text?.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == currentTermDefinition.lowercased()) {
             if(self.originalSender == conversation.localParticipantIdentifier) {
                 numberCorrect += 2
                 rightWrongResult.text = "Correct 🤑"
