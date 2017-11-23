@@ -6,6 +6,7 @@
 //  Copyright © 2017 Leo Shao. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import Messages
 
@@ -32,6 +33,11 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var opponentLabel: UILabel!
     @IBOutlet weak var youLabel: UILabel!
+    @IBOutlet weak var mcButton1: UIButton!
+    @IBOutlet weak var mcButton2: UIButton!
+    @IBOutlet weak var mcButton3: UIButton!
+    @IBOutlet weak var mcButton4: UIButton!
+    @IBOutlet weak var idkButton: UIButton!
     
     private var setTitle = ""
     private var setAuthor = ""
@@ -50,6 +56,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     var buttonSetAuthors = [String?](repeating: nil, count: 10)
     var buttonSetTermCounts = [Int?](repeating: nil, count: 10)
     
+    var mcCorrectButton = -1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -67,14 +75,14 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     // MARK: - Conversation Handling
     
     override func willBecomeActive(with conversation: MSConversation) {
-        if(!isSenderSameAsRecipient()) {
+        if let message = conversation.selectedMessage {
+        if(message.senderParticipantIdentifier != conversation.localParticipantIdentifier) {
             // Called when the extension is about to move from the inactive to active state.
             // This will happen when the extension is about to present UI.
             
             // Use this method to configure the extension and restore previously stored state.
             
             // If there is a selectedMessage (and we're not just launching the app to send a new quiz to someone), it will create a variable 'message' that represents the selected message.
-            if let message = conversation.selectedMessage {
                 // Sets all the buttons and the search box to hidden since we aren't searching for a study set; we're playing a game.
                 searchBox.isHidden = true
                 buttonSetOne.isHidden = true
@@ -136,6 +144,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                                 self.opponentScoreLabel.isHidden = false
                                                 self.opponentLabel.isHidden = false
                                                 self.youLabel.isHidden = false
+                                                self.idkButton.isHidden = false
                                                 self.progressBar.isHidden = false
                                                 self.progressBar.progress = Float(self.questionNumber) / Float(self.term_count)
                                                 if(self.originalSender == conversation.localParticipantIdentifier) {
@@ -179,7 +188,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
     
     override func didSelect(_ message: MSMessage, conversation: MSConversation) {
-        if(!isSenderSameAsRecipient()) {
+        if(message.senderParticipantIdentifier != conversation.localParticipantIdentifier) {
             // Sets all the buttons and the search box to hidden since we aren't searching for a study set; we're playing a game.
             searchBox.isHidden = true
             buttonSetOne.isHidden = true
@@ -241,6 +250,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                             self.opponentScoreLabel.isHidden = false
                                             self.opponentLabel.isHidden = false
                                             self.youLabel.isHidden = false
+                                            self.idkButton.isHidden = false
                                             self.progressBar.isHidden = false
                                             self.progressBar.progress = Float(self.questionNumber) / Float(self.term_count)
                                             if(self.originalSender == conversation.localParticipantIdentifier) {
@@ -376,11 +386,11 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         guard let conversation = activeConversation else { return false }
         if(termTextBox.text?.lowercased() == currentTermDefinition.lowercased()) {
             if(self.originalSender == conversation.localParticipantIdentifier) {
-                numberCorrect += 1
+                numberCorrect += 2
                 rightWrongResult.text = "Correct 🤑"
                 myScoreLabel.text = String(numberCorrect)
             } else {
-                opponentNumberCorrect += 1
+                opponentNumberCorrect += 2
                 rightWrongResult.text = "Correct 🤑"
                 myScoreLabel.text = String(opponentNumberCorrect)
             }
@@ -563,6 +573,446 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
             }
         })
         task.resume()
+    }
+    
+    @IBAction func idkButtonPressed(_ sender: UIButton) {
+        mcButton1.isHidden = false
+        mcButton2.isHidden = false
+        mcButton3.isHidden = false
+        mcButton4.isHidden = false
+        termTextBox.isHidden = true
+        idkButton.isHidden = true
+        
+        
+        var request = URLRequest(url: URL(string: "https://api.quizlet.com/2.0/sets/" + String(self.setID) + "?client_id=bFxdXkTKvW")!)
+        // Sets the http method to GET which means GETting data FROM the API. There are two methods, GET and POST. POST means POSTing data TO the API. In this case, we're using GET.
+        request.httpMethod = "GET"
+        // Sets the file type that the data will be retrieved to be JSON, which is the standard format.
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Starts the HTTP session (connects to the API URL with the search query and GETs the data).
+        let session = URLSession.shared
+        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+            print(response!)
+            do {
+                // Converts and saves the returned data into a variable called 'json' in appropriate JSON formatting.
+                let json = try JSONSerialization.jsonObject(with: data!, options: [])
+                // Creates a dictionary from the JSON file to look up the value for the key given.
+                if let dictionary = json as? [String: Any] {
+                    // Creates an array of the returned terms.
+                    if let nestedArray = dictionary["terms"] as? [Any] {
+                        let term = nestedArray[self.questionNumber - 1] as? [String: Any]
+                        let termTerm = term!["term"] as? String
+                        // Creates a dictionary of the current term details (e.g. term, definition, term number).
+                        
+                        var pickedTermsArray = [Int?](repeating: nil, count: 3)
+                        var pickedButtonsArray = [Int?](repeating: nil, count: 3)
+                        for _ in 0...2 {
+                            var randomTermIndex = arc4random_uniform(UInt32(self.term_count))
+                            var randomButtonInt = arc4random_uniform(4)
+                            DispatchQueue.main.sync {
+                                for pickedTerm in pickedTermsArray {
+                                    while (Int(randomTermIndex) == pickedTerm || Int(randomTermIndex) == (self.questionNumber - 1)) {
+                                        randomTermIndex = arc4random_uniform(UInt32(self.term_count))
+                                    }
+                                }
+                                for pickedButton in pickedButtonsArray {
+                                    while (Int(randomButtonInt) == pickedButton) {
+                                        randomButtonInt = arc4random_uniform(4)
+                                    }
+                                }
+                            }
+                            if (randomButtonInt == 0) {
+                                let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
+                                let termTerm = term!["term"] as? String
+                                DispatchQueue.main.sync {
+                                    self.mcButton1.setTitle(termTerm, for: .normal)
+                                }
+                                pickedTermsArray.append(Int(randomTermIndex))
+                                pickedButtonsArray.append(0)
+                            } else if (randomButtonInt == 1) {
+                                let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
+                                let termTerm = term!["term"] as? String
+                                DispatchQueue.main.sync {
+                                    self.mcButton2.setTitle(termTerm, for: .normal)
+                                }
+                                pickedTermsArray.append(Int(randomTermIndex))
+                                pickedButtonsArray.append(1)
+                            } else if (randomButtonInt == 2) {
+                                let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
+                                let termTerm = term!["term"] as? String
+                                DispatchQueue.main.sync {
+                                    self.mcButton3.setTitle(termTerm, for: .normal)
+                                }
+                                pickedTermsArray.append(Int(randomTermIndex))
+                                pickedButtonsArray.append(2)
+                            } else if (randomButtonInt == 3) {
+                                let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
+                                let termTerm = term!["term"] as? String
+                                DispatchQueue.main.sync {
+                                    self.mcButton4.setTitle(termTerm, for: .normal)
+                                }
+                                pickedTermsArray.append(Int(randomTermIndex))
+                                pickedButtonsArray.append(3)
+                            }
+                        }
+                        if (!pickedButtonsArray.contains(where: { $0 == 0 })) {
+                            DispatchQueue.main.sync {
+                                self.mcButton1.setTitle(termTerm, for: .normal)
+                            }
+                            self.mcCorrectButton = 0
+                        } else if (!pickedButtonsArray.contains(where: { $0 == 1 })) {
+                            DispatchQueue.main.sync {
+                                self.mcButton2.setTitle(termTerm, for: .normal)
+                            }
+                            self.mcCorrectButton = 1
+                        } else if (!pickedButtonsArray.contains(where: { $0 == 2 })) {
+                            DispatchQueue.main.sync {
+                                self.mcButton3.setTitle(termTerm, for: .normal)
+                            }
+                            self.mcCorrectButton = 2
+                        } else if (!pickedButtonsArray.contains(where: { $0 == 3 })) {
+                            DispatchQueue.main.sync {
+                                self.mcButton4.setTitle(termTerm, for: .normal)
+                            }
+                            self.mcCorrectButton = 3
+                        }
+                        print(self.mcCorrectButton)
+                    }
+                }
+            } catch {
+                print("error")
+            }
+        })
+        task.resume()
+    }
+    
+    @IBAction func mcButton1Pressed(_ sender: UIButton) {
+        guard let conversation = activeConversation else { fatalError("Expected conversation.") }
+        if (self.mcCorrectButton == 0) {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                numberCorrect += 1
+                rightWrongResult.text = "Correct 🤑"
+                myScoreLabel.text = String(numberCorrect)
+            } else {
+                opponentNumberCorrect += 1
+                rightWrongResult.text = "Correct 🤑"
+                myScoreLabel.text = String(opponentNumberCorrect)
+            }
+            rightWrongResult.textColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            opponentLastCorrect = true
+            mcButton1.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+        } else {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                rightWrongResult.text = "Wrong 😤"
+                myScoreLabel.text = String(numberCorrect)
+            } else {
+                rightWrongResult.text = "Wrong 😤"
+                myScoreLabel.text = String(opponentNumberCorrect)
+            }
+            rightWrongResult.textColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
+            if (self.mcCorrectButton == 1) {
+                mcButton2.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            } else if (self.mcCorrectButton == 2) {
+                mcButton3.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            } else if (self.mcCorrectButton == 3) {
+                mcButton4.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            }
+            mcButton1.backgroundColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
+            opponentLastCorrect = false
+        }
+        opponentScoreLabel.isHidden = false
+        rightWrongResult.isHidden = false
+        myScoreLabel.isHidden = false
+        sendButton.isHidden = false
+        
+        if(self.questionNumber == self.term_count) {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
+                // Creates a variable 'session' with the selected message's session.
+                let session = conversation.selectedMessage?.session ?? MSSession()
+                var messageCaption = NSLocalizedString("", comment: "")
+                if (self.numberCorrect > self.opponentNumberCorrect) {
+                    messageCaption = NSLocalizedString("I win \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
+                } else if (self.numberCorrect < self.opponentNumberCorrect) {
+                    messageCaption = NSLocalizedString("You win \(self.opponentNumberCorrect)-\(self.numberCorrect)!", comment: "")
+                } else {
+                    messageCaption = NSLocalizedString("We tied \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
+                }
+                
+                // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
+                let layout = MSMessageTemplateLayout()
+                layout.image = UIImage(named: "quizlet.png")
+                layout.imageTitle = "\(self.setTitle) by \(self.setAuthor)"
+                layout.caption = messageCaption
+                layout.subcaption = "\(self.term_count) terms"
+                
+                // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
+                let message = MSMessage(session: session)
+                message.layout = layout
+                message.summaryText = "Quizlet With Friends"
+                message.accessibilityLabel = messageCaption
+                
+                // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
+                conversation.insert(message) { error in
+                    if let error = error {
+                        print(error)
+                    }
+                }
+                
+                requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
+            }
+        } else {
+            if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
+            let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
+            composeMessage(quiz: quiz)
+        }
+    }
+    
+    @IBAction func mcButton2Pressed(_ sender: UIButton) {
+        guard let conversation = activeConversation else { fatalError("Expected conversation.") }
+        if (self.mcCorrectButton == 1) {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                numberCorrect += 1
+                rightWrongResult.text = "Correct 🤑"
+                myScoreLabel.text = String(numberCorrect)
+            } else {
+                opponentNumberCorrect += 1
+                rightWrongResult.text = "Correct 🤑"
+                myScoreLabel.text = String(opponentNumberCorrect)
+            }
+            rightWrongResult.textColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            opponentLastCorrect = true
+            mcButton2.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+        } else {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                rightWrongResult.text = "Wrong 😤"
+                myScoreLabel.text = String(numberCorrect)
+            } else {
+                rightWrongResult.text = "Wrong 😤"
+                myScoreLabel.text = String(opponentNumberCorrect)
+            }
+            rightWrongResult.textColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
+            if (self.mcCorrectButton == 0) {
+                mcButton1.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            } else if (self.mcCorrectButton == 2) {
+                mcButton3.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            } else if (self.mcCorrectButton == 3) {
+                mcButton4.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            }
+            opponentLastCorrect = false
+            mcButton2.backgroundColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
+        }
+        opponentScoreLabel.isHidden = false
+        rightWrongResult.isHidden = false
+        myScoreLabel.isHidden = false
+        sendButton.isHidden = false
+        
+        if(self.questionNumber == self.term_count) {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
+                // Creates a variable 'session' with the selected message's session.
+                let session = conversation.selectedMessage?.session ?? MSSession()
+                var messageCaption = NSLocalizedString("", comment: "")
+                if (self.numberCorrect > self.opponentNumberCorrect) {
+                    messageCaption = NSLocalizedString("I win \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
+                } else if (self.numberCorrect < self.opponentNumberCorrect) {
+                    messageCaption = NSLocalizedString("You win \(self.opponentNumberCorrect)-\(self.numberCorrect)!", comment: "")
+                } else {
+                    messageCaption = NSLocalizedString("We tied \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
+                }
+                
+                // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
+                let layout = MSMessageTemplateLayout()
+                layout.image = UIImage(named: "quizlet.png")
+                layout.imageTitle = "\(self.setTitle) by \(self.setAuthor)"
+                layout.caption = messageCaption
+                layout.subcaption = "\(self.term_count) terms"
+                
+                // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
+                let message = MSMessage(session: session)
+                message.layout = layout
+                message.summaryText = "Quizlet With Friends"
+                message.accessibilityLabel = messageCaption
+                
+                // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
+                conversation.insert(message) { error in
+                    if let error = error {
+                        print(error)
+                    }
+                }
+                
+                requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
+            }
+        } else {
+            if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
+            let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
+            composeMessage(quiz: quiz)
+        }
+    }
+    
+    @IBAction func mcButton3Pressed(_ sender: UIButton) {
+        guard let conversation = activeConversation else { fatalError("Expected conversation.") }
+        if (self.mcCorrectButton == 2) {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                numberCorrect += 1
+                rightWrongResult.text = "Correct 🤑"
+                myScoreLabel.text = String(numberCorrect)
+            } else {
+                opponentNumberCorrect += 1
+                rightWrongResult.text = "Correct 🤑"
+                myScoreLabel.text = String(opponentNumberCorrect)
+            }
+            rightWrongResult.textColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            opponentLastCorrect = true
+            mcButton3.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+        } else {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                rightWrongResult.text = "Wrong 😤"
+                myScoreLabel.text = String(numberCorrect)
+            } else {
+                rightWrongResult.text = "Wrong 😤"
+                myScoreLabel.text = String(opponentNumberCorrect)
+            }
+            rightWrongResult.textColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
+            if (self.mcCorrectButton == 0) {
+                mcButton1.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            } else if (self.mcCorrectButton == 1) {
+                mcButton2.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            } else if (self.mcCorrectButton == 3) {
+                mcButton4.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            }
+            opponentLastCorrect = false
+            mcButton3.backgroundColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
+        }
+        opponentScoreLabel.isHidden = false
+        rightWrongResult.isHidden = false
+        myScoreLabel.isHidden = false
+        sendButton.isHidden = false
+        
+        if(self.questionNumber == self.term_count) {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
+                // Creates a variable 'session' with the selected message's session.
+                let session = conversation.selectedMessage?.session ?? MSSession()
+                var messageCaption = NSLocalizedString("", comment: "")
+                if (self.numberCorrect > self.opponentNumberCorrect) {
+                    messageCaption = NSLocalizedString("I win \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
+                } else if (self.numberCorrect < self.opponentNumberCorrect) {
+                    messageCaption = NSLocalizedString("You win \(self.opponentNumberCorrect)-\(self.numberCorrect)!", comment: "")
+                } else {
+                    messageCaption = NSLocalizedString("We tied \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
+                }
+                
+                // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
+                let layout = MSMessageTemplateLayout()
+                layout.image = UIImage(named: "quizlet.png")
+                layout.imageTitle = "\(self.setTitle) by \(self.setAuthor)"
+                layout.caption = messageCaption
+                layout.subcaption = "\(self.term_count) terms"
+                
+                // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
+                let message = MSMessage(session: session)
+                message.layout = layout
+                message.summaryText = "Quizlet With Friends"
+                message.accessibilityLabel = messageCaption
+                
+                // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
+                conversation.insert(message) { error in
+                    if let error = error {
+                        print(error)
+                    }
+                }
+                
+                requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
+            }
+        } else {
+            if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
+            let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
+            composeMessage(quiz: quiz)
+        }
+    }
+    
+    @IBAction func mcButton4Pressed(_ sender: UIButton) {
+        guard let conversation = activeConversation else { fatalError("Expected conversation.") }
+        if (self.mcCorrectButton == 3) {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                numberCorrect += 1
+                rightWrongResult.text = "Correct 🤑"
+                myScoreLabel.text = String(numberCorrect)
+            } else {
+                opponentNumberCorrect += 1
+                rightWrongResult.text = "Correct 🤑"
+                myScoreLabel.text = String(opponentNumberCorrect)
+            }
+            rightWrongResult.textColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            opponentLastCorrect = true
+            mcButton4.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+        } else {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                rightWrongResult.text = "Wrong 😤"
+                myScoreLabel.text = String(numberCorrect)
+            } else {
+                rightWrongResult.text = "Wrong 😤"
+                myScoreLabel.text = String(opponentNumberCorrect)
+            }
+            rightWrongResult.textColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
+            if (self.mcCorrectButton == 0) {
+                mcButton1.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            } else if (self.mcCorrectButton == 1) {
+                mcButton2.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            } else if (self.mcCorrectButton == 2) {
+                mcButton3.backgroundColor = UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0)
+            }
+            opponentLastCorrect = false
+            mcButton4.backgroundColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
+        }
+        opponentScoreLabel.isHidden = false
+        rightWrongResult.isHidden = false
+        myScoreLabel.isHidden = false
+        sendButton.isHidden = false
+        
+        if(self.questionNumber == self.term_count) {
+            if(self.originalSender == conversation.localParticipantIdentifier) {
+                // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
+                // Creates a variable 'session' with the selected message's session.
+                let session = conversation.selectedMessage?.session ?? MSSession()
+                var messageCaption = NSLocalizedString("", comment: "")
+                if (self.numberCorrect > self.opponentNumberCorrect) {
+                    messageCaption = NSLocalizedString("I win \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
+                } else if (self.numberCorrect < self.opponentNumberCorrect) {
+                    messageCaption = NSLocalizedString("You win \(self.opponentNumberCorrect)-\(self.numberCorrect)!", comment: "")
+                } else {
+                    messageCaption = NSLocalizedString("We tied \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
+                }
+                
+                // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
+                let layout = MSMessageTemplateLayout()
+                layout.image = UIImage(named: "quizlet.png")
+                layout.imageTitle = "\(self.setTitle) by \(self.setAuthor)"
+                layout.caption = messageCaption
+                layout.subcaption = "\(self.term_count) terms"
+                
+                // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
+                let message = MSMessage(session: session)
+                message.layout = layout
+                message.summaryText = "Quizlet With Friends"
+                message.accessibilityLabel = messageCaption
+                
+                // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
+                conversation.insert(message) { error in
+                    if let error = error {
+                        print(error)
+                    }
+                }
+                
+                requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
+            }
+        } else {
+            if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
+            let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
+            composeMessage(quiz: quiz)
+        }
     }
     
     @IBAction func sendButtonPressed(_ sender: UIButton) {
