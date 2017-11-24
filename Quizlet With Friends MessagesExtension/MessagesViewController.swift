@@ -188,7 +188,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
     
     override func didSelect(_ message: MSMessage, conversation: MSConversation) {
-        if(message.senderParticipantIdentifier != conversation.localParticipantIdentifier  && message.url != nil) {
+        if(message.senderParticipantIdentifier != conversation.localParticipantIdentifier && message.url != nil) {
             // Sets all the buttons and the search box to hidden since we aren't searching for a study set; we're playing a game.
             searchBox.isHidden = true
             buttonSetOne.isHidden = true
@@ -613,73 +613,59 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                             var randomTermIndex = arc4random_uniform(UInt32(self.term_count))
                             var randomButtonInt = arc4random_uniform(4)
                             DispatchQueue.main.sync {
-                                for pickedTerm in pickedTermsArray {
-                                    while (Int(randomTermIndex) == pickedTerm || Int(randomTermIndex) == (self.questionNumber - 1)) {
-                                        randomTermIndex = arc4random_uniform(UInt32(self.term_count))
-                                    }
-                                }
-                                for pickedButton in pickedButtonsArray {
-                                    while (Int(randomButtonInt) == pickedButton) {
-                                        randomButtonInt = arc4random_uniform(4)
-                                    }
+                                while (pickedTermsArray.contains(where: { $0 == Int(randomTermIndex) }) || Int(randomTermIndex) == (self.questionNumber - 1)) {
+                                    randomTermIndex = arc4random_uniform(UInt32(self.term_count))
                                 }
                             }
-                            if (randomButtonInt == 0) {
-                                let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
-                                let termTerm = term!["term"] as? String
-                                DispatchQueue.main.sync {
+                            DispatchQueue.main.sync {
+                                while (pickedButtonsArray.contains(where: { $0 == Int(randomButtonInt) })) {
+                                    randomButtonInt = arc4random_uniform(4)
+                                }
+                            }
+                            DispatchQueue.main.sync {
+                                if (randomButtonInt == 0) {
+                                    let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
+                                    let termTerm = term!["term"] as? String
                                     self.mcButton1.setTitle(termTerm, for: .normal)
-                                }
-                                pickedTermsArray.append(Int(randomTermIndex))
-                                pickedButtonsArray.append(0)
-                            } else if (randomButtonInt == 1) {
-                                let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
-                                let termTerm = term!["term"] as? String
-                                DispatchQueue.main.sync {
+                                    pickedTermsArray.append(Int(randomTermIndex))
+                                    pickedButtonsArray.append(0)
+                                } else if (randomButtonInt == 1) {
+                                    let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
+                                    let termTerm = term!["term"] as? String
                                     self.mcButton2.setTitle(termTerm, for: .normal)
-                                }
-                                pickedTermsArray.append(Int(randomTermIndex))
-                                pickedButtonsArray.append(1)
-                            } else if (randomButtonInt == 2) {
-                                let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
-                                let termTerm = term!["term"] as? String
-                                DispatchQueue.main.sync {
+                                    pickedTermsArray.append(Int(randomTermIndex))
+                                    pickedButtonsArray.append(1)
+                                } else if (randomButtonInt == 2) {
+                                    let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
+                                    let termTerm = term!["term"] as? String
                                     self.mcButton3.setTitle(termTerm, for: .normal)
-                                }
-                                pickedTermsArray.append(Int(randomTermIndex))
-                                pickedButtonsArray.append(2)
-                            } else if (randomButtonInt == 3) {
-                                let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
-                                let termTerm = term!["term"] as? String
-                                DispatchQueue.main.sync {
+                                    pickedTermsArray.append(Int(randomTermIndex))
+                                    pickedButtonsArray.append(2)
+                                } else if (randomButtonInt == 3) {
+                                    let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
+                                    let termTerm = term!["term"] as? String
                                     self.mcButton4.setTitle(termTerm, for: .normal)
+                                    pickedTermsArray.append(Int(randomTermIndex))
+                                    pickedButtonsArray.append(3)
                                 }
-                                pickedTermsArray.append(Int(randomTermIndex))
-                                pickedButtonsArray.append(3)
                             }
                         }
-                        if (!pickedButtonsArray.contains(where: { $0 == 0 })) {
-                            DispatchQueue.main.sync {
+                        DispatchQueue.main.sync {
+                            if (!pickedButtonsArray.contains(where: { $0 == 0 })) {
                                 self.mcButton1.setTitle(termTerm, for: .normal)
-                            }
-                            self.mcCorrectButton = 0
-                        } else if (!pickedButtonsArray.contains(where: { $0 == 1 })) {
-                            DispatchQueue.main.sync {
+                                self.mcCorrectButton = 0
+                            } else if (!pickedButtonsArray.contains(where: { $0 == 1 })) {
                                 self.mcButton2.setTitle(termTerm, for: .normal)
-                            }
-                            self.mcCorrectButton = 1
-                        } else if (!pickedButtonsArray.contains(where: { $0 == 2 })) {
-                            DispatchQueue.main.sync {
+                                self.mcCorrectButton = 1
+                            } else if (!pickedButtonsArray.contains(where: { $0 == 2 })) {
                                 self.mcButton3.setTitle(termTerm, for: .normal)
-                            }
-                            self.mcCorrectButton = 2
-                        } else if (!pickedButtonsArray.contains(where: { $0 == 3 })) {
-                            DispatchQueue.main.sync {
+                                self.mcCorrectButton = 2
+                            } else if (!pickedButtonsArray.contains(where: { $0 == 3 })) {
                                 self.mcButton4.setTitle(termTerm, for: .normal)
+                                self.mcCorrectButton = 3
                             }
-                            self.mcCorrectButton = 3
+                            print(self.mcCorrectButton)
                         }
-                        print(self.mcCorrectButton)
                     }
                 }
             } catch {
@@ -763,6 +749,10 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                 }
                 
                 requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
+            } else {
+                if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
+                let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
+                composeMessage(quiz: quiz)
             }
         } else {
             if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
@@ -845,6 +835,10 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                 }
                 
                 requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
+            } else {
+                if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
+                let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
+                composeMessage(quiz: quiz)
             }
         } else {
             if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
@@ -927,6 +921,10 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                 }
                 
                 requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
+            } else {
+                if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
+                let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
+                composeMessage(quiz: quiz)
             }
         } else {
             if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
@@ -1009,6 +1007,10 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                 }
                 
                 requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
+            } else {
+                if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
+                let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
+                composeMessage(quiz: quiz)
             }
         } else {
             if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
