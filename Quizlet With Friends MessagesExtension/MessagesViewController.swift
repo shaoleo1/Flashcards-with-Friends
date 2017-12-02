@@ -38,6 +38,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBOutlet weak var mcButton3: UIButton!
     @IBOutlet weak var mcButton4: UIButton!
     @IBOutlet weak var idkButton: UIButton!
+    @IBOutlet weak var labelScrollView: UIScrollView!
     
     private var setTitle = ""
     private var setAuthor = ""
@@ -139,6 +140,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                                 // Sets the term label to the term we just got and makes the table and text box visible.
                                                 self.definitionLabel.text = definition
                                                 self.definitionLabel.isHidden = false
+                                                self.labelScrollView.isHidden = false
+                                                self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
                                                 self.termTextBox.isHidden = false
                                                 self.myScoreLabel.isHidden = false
                                                 self.opponentScoreLabel.isHidden = false
@@ -245,6 +248,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                             // Sets the term label to the term we just got and makes the table and text box visible.
                                             self.definitionLabel.text = definition
                                             self.definitionLabel.isHidden = false
+                                            self.labelScrollView.isHidden = false
+                                            self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
                                             self.termTextBox.isHidden = false
                                             self.myScoreLabel.isHidden = false
                                             self.opponentScoreLabel.isHidden = false
@@ -628,24 +633,36 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                     let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
                                     let termTerm = term!["term"] as? String
                                     self.mcButton1.setTitle(termTerm, for: .normal)
+                                    self.mcButton1.titleLabel?.minimumScaleFactor = 0.6
+                                    self.mcButton1.titleLabel?.numberOfLines = 3
+                                    self.mcButton1.titleLabel?.adjustsFontSizeToFitWidth = true
                                     pickedTermsArray.append(Int(randomTermIndex))
                                     pickedButtonsArray.append(0)
                                 } else if (randomButtonInt == 1) {
                                     let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
                                     let termTerm = term!["term"] as? String
                                     self.mcButton2.setTitle(termTerm, for: .normal)
+                                    self.mcButton2.titleLabel?.minimumScaleFactor = 0.6
+                                    self.mcButton2.titleLabel?.numberOfLines = 3
+                                    self.mcButton2.titleLabel?.adjustsFontSizeToFitWidth = true
                                     pickedTermsArray.append(Int(randomTermIndex))
                                     pickedButtonsArray.append(1)
                                 } else if (randomButtonInt == 2) {
                                     let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
                                     let termTerm = term!["term"] as? String
                                     self.mcButton3.setTitle(termTerm, for: .normal)
+                                    self.mcButton3.titleLabel?.minimumScaleFactor = 0.6
+                                    self.mcButton3.titleLabel?.numberOfLines = 3
+                                    self.mcButton3.titleLabel?.adjustsFontSizeToFitWidth = true
                                     pickedTermsArray.append(Int(randomTermIndex))
                                     pickedButtonsArray.append(2)
                                 } else if (randomButtonInt == 3) {
                                     let term = nestedArray[Int(randomTermIndex)] as? [String: Any]
                                     let termTerm = term!["term"] as? String
                                     self.mcButton4.setTitle(termTerm, for: .normal)
+                                    self.mcButton4.titleLabel?.minimumScaleFactor = 0.6
+                                    self.mcButton4.titleLabel?.numberOfLines = 3
+                                    self.mcButton4.titleLabel?.adjustsFontSizeToFitWidth = true
                                     pickedTermsArray.append(Int(randomTermIndex))
                                     pickedButtonsArray.append(3)
                                 }
@@ -654,15 +671,27 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                         DispatchQueue.main.sync {
                             if (!pickedButtonsArray.contains(where: { $0 == 0 })) {
                                 self.mcButton1.setTitle(termTerm, for: .normal)
+                                self.mcButton1.titleLabel?.minimumScaleFactor = 0.5
+                                self.mcButton1.titleLabel?.numberOfLines = 3
+                                self.mcButton1.titleLabel?.adjustsFontSizeToFitWidth = true
                                 self.mcCorrectButton = 0
                             } else if (!pickedButtonsArray.contains(where: { $0 == 1 })) {
                                 self.mcButton2.setTitle(termTerm, for: .normal)
+                                self.mcButton2.titleLabel?.minimumScaleFactor = 0.5
+                                self.mcButton2.titleLabel?.numberOfLines = 3
+                                self.mcButton2.titleLabel?.adjustsFontSizeToFitWidth = true
                                 self.mcCorrectButton = 1
                             } else if (!pickedButtonsArray.contains(where: { $0 == 2 })) {
                                 self.mcButton3.setTitle(termTerm, for: .normal)
+                                self.mcButton3.titleLabel?.minimumScaleFactor = 0.5
+                                self.mcButton3.titleLabel?.numberOfLines = 3
+                                self.mcButton3.titleLabel?.adjustsFontSizeToFitWidth = true
                                 self.mcCorrectButton = 2
                             } else if (!pickedButtonsArray.contains(where: { $0 == 3 })) {
                                 self.mcButton4.setTitle(termTerm, for: .normal)
+                                self.mcButton4.titleLabel?.minimumScaleFactor = 0.5
+                                self.mcButton4.titleLabel?.numberOfLines = 3
+                                self.mcButton4.titleLabel?.adjustsFontSizeToFitWidth = true
                                 self.mcCorrectButton = 3
                             }
                             print(self.mcCorrectButton)
