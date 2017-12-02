@@ -141,7 +141,16 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                                 self.definitionLabel.text = definition
                                                 self.definitionLabel.isHidden = false
                                                 self.labelScrollView.isHidden = false
-                                                self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
+                                                if #available(iOSApplicationExtension 11.0, *) {
+                                                    self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
+                                                } else {
+                                                    // Fallback on earlier versions
+                                                    DispatchQueue.main.sync {
+                                                        self.definitionLabel.numberOfLines = 5
+                                                        self.definitionLabel.lineBreakMode = .byClipping
+                                                        self.definitionLabel.adjustsFontSizeToFitWidth = true
+                                                    }
+                                                }
                                                 self.termTextBox.isHidden = false
                                                 self.myScoreLabel.isHidden = false
                                                 self.opponentScoreLabel.isHidden = false
@@ -249,7 +258,16 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                             self.definitionLabel.text = definition
                                             self.definitionLabel.isHidden = false
                                             self.labelScrollView.isHidden = false
-                                            self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
+                                            if #available(iOSApplicationExtension 11.0, *) {
+                                                self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
+                                            } else {
+                                                // Fallback on earlier versions
+                                                DispatchQueue.main.sync {
+                                                    self.definitionLabel.numberOfLines = 5
+                                                    self.definitionLabel.lineBreakMode = .byClipping
+                                                    self.definitionLabel.adjustsFontSizeToFitWidth = true
+                                                }
+                                            }
                                             self.termTextBox.isHidden = false
                                             self.myScoreLabel.isHidden = false
                                             self.opponentScoreLabel.isHidden = false
