@@ -149,7 +149,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </searchBar>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h6S-k1-tKh">
-                                <rect key="frame" x="0.0" y="468" width="321" height="40"/>
+                                <rect key="frame" x="0.0" y="488" width="321" height="40"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="QUD-kf-alA"/>
@@ -319,7 +319,7 @@
                             <constraint firstItem="wBj-IB-dqy" firstAttribute="top" secondItem="LDy-ih-0nr" secondAttribute="top" constant="91" id="27y-Lx-k13"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="hcH-5B-gAm" secondAttribute="trailing" constant="230" id="2K3-Cj-E48"/>
                             <constraint firstItem="wBj-IB-dqy" firstAttribute="top" secondItem="drg-Bn-ejt" secondAttribute="bottom" constant="45" id="2Pn-5Q-QmD"/>
-                            <constraint firstItem="LDy-ih-0nr" firstAttribute="bottom" secondItem="h6S-k1-tKh" secondAttribute="bottom" constant="20" id="2mL-4g-P5a"/>
+                            <constraint firstItem="LDy-ih-0nr" firstAttribute="bottom" secondItem="h6S-k1-tKh" secondAttribute="bottom" id="2mL-4g-P5a"/>
                             <constraint firstItem="Wzd-bg-dP5" firstAttribute="top" secondItem="YM8-GM-xo0" secondAttribute="bottom" constant="40" id="4ar-ST-gTm"/>
                             <constraint firstItem="uQs-Xr-VMT" firstAttribute="width" secondItem="pEG-Te-0A0" secondAttribute="width" id="53l-36-XvI"/>
                             <constraint firstItem="A3v-Oa-OIz" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="5j9-Qd-l0D"/>
