@@ -109,7 +109,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                 // Starts the HTTP session (connects to the API URL with the search query and GETs the data).
                 let session = URLSession.shared
                 let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-                    print(response!)
                     do {
                         // Converts and saves the returned data into a variable called 'json' in appropriate JSON formatting.
                         let json = try JSONSerialization.jsonObject(with: data!, options: [])
@@ -123,8 +122,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                     if let term = currentTerm["term"] as? String {
                                         // Looks up the definition and saves it into the variable 'definition'.
                                         if let definition = currentTerm["definition"] as? String {
-                                            // Prints 'definition' - 'term'.
-                                            print("\(definition) - \(term)")
                                             self.setTitle = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setTitle")!
                                             self.setAuthor = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setAuthor")!
                                             self.term_count = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "term_count")!)!
@@ -227,7 +224,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
             // Starts the HTTP session (connects to the API URL with the search query and GETs the data).
             let session = URLSession.shared
             let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-                print(response!)
                 do {
                     // Converts and saves the returned data into a variable called 'json' in appropriate JSON formatting.
                     let json = try JSONSerialization.jsonObject(with: data!, options: [])
@@ -241,8 +237,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                 if let term = currentTerm["term"] as? String {
                                     // Looks up the definition and saves it into the variable 'definition'.
                                     if let definition = currentTerm["definition"] as? String {
-                                        // Prints 'term' - 'definition'.
-                                        print("\(term) - \(definition)")
                                         self.setTitle = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setTitle")!
                                         self.setAuthor = self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "setAuthor")!
                                         self.term_count = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "term_count")!)!
@@ -397,8 +391,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
 
     @IBAction func setButtonPressed(_ sender: UIButton) {
-        // Prints the ID of the button pressed. Each button has a tag from 1-10. It subtracts 1 because indexes go from 0-9.
-        print(buttonSetIDs[sender.tag - 1]!)
         // Creates a Quiz structure containing all the data necessary.
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
         let quiz = Quiz(setTitle: buttonSetTitles[sender.tag - 1]!, setAuthor: buttonSetAuthors[sender.tag - 1]!, term_count: buttonSetTermCounts[sender.tag - 1]!, setID: buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0, opponentNumberCorrect: 0, originalSender: conversation.localParticipantIdentifier)
@@ -521,7 +513,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         // Starts the HTTP session (connects to the API URL with the search query and GETs the data).
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            print(response!)
             do {
                 // Converts and saves the returned data into a variable called 'json' in appropriate JSON formatting.
                 let json = try JSONSerialization.jsonObject(with: data!, options: [])
@@ -539,8 +530,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                     if let author = setDictionary["created_by"] as? String {
                                         // Looks up the term count of the set and saves it into the variable 'term_count'.
                                         if let term_count = setDictionary["term_count"] as? Int {
-                                            // Prints 'title' - 'author' - 'term_count'.
-                                            print("\(title) - \(author) - \(term_count)")
                                             // Looks up the id of the set and saves it into the variable 'id'.
                                             if let id = setDictionary["id"] as? Int {
                                                 // Saves the id into the appropriate index of the buttonSetIDs array.
@@ -630,7 +619,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         // Starts the HTTP session (connects to the API URL with the search query and GETs the data).
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            print(response!)
             do {
                 // Converts and saves the returned data into a variable called 'json' in appropriate JSON formatting.
                 let json = try JSONSerialization.jsonObject(with: data!, options: [])
@@ -723,7 +711,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                 self.mcButton4.titleLabel?.adjustsFontSizeToFitWidth = true
                                 self.mcCorrectButton = 3
                             }
-                            print(self.mcCorrectButton)
                         }
                     }
                 }
