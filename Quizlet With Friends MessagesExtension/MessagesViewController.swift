@@ -148,6 +148,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                                     DispatchQueue.main.sync {
                                                         self.definitionLabel.numberOfLines = 5
                                                         self.definitionLabel.lineBreakMode = .byClipping
+                                                        self.definitionLabel.minimumScaleFactor = 0.25
                                                         self.definitionLabel.adjustsFontSizeToFitWidth = true
                                                     }
                                                 }
@@ -265,6 +266,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                                 DispatchQueue.main.sync {
                                                     self.definitionLabel.numberOfLines = 5
                                                     self.definitionLabel.lineBreakMode = .byClipping
+                                                    self.definitionLabel.minimumScaleFactor = 0.25
                                                     self.definitionLabel.adjustsFontSizeToFitWidth = true
                                                 }
                                             }
@@ -429,7 +431,16 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                 myScoreLabel.text = String(opponentNumberCorrect)
             }
             rightWrongResult.textColor = UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0)
-            termTextBox.text = "You put: \(termTextBox.text!) - Correct term: \(currentTermDefinition)"
+            let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: "\(termTextBox.text!) \(currentTermDefinition)")
+            attributedString.setColorForText(textForAttribute: termTextBox.text!, withColor: UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0))
+            attributedString.setColorForText(textForAttribute: currentTermDefinition, withColor: UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0))
+            if (termTextBox.intrinsicContentSize.width > self.termTextBox.bounds.width) {
+                let alert = UIAlertController(title: "Correct Answer", message: currentTermDefinition, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: { _ in
+                }))
+                self.present(alert, animated: true, completion: nil)
+            }
+            termTextBox.attributedText = attributedString
             opponentLastCorrect = false
         }
         termTextBox.isUserInteractionEnabled = false
@@ -1070,6 +1081,15 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
         let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
         composeMessage(quiz: quiz)
+    }
+    
+}
+
+extension NSMutableAttributedString {
+    
+    func setColorForText(textForAttribute: String, withColor color: UIColor) {
+        let range: NSRange = self.mutableString.range(of: textForAttribute, options: .caseInsensitive)
+        self.addAttribute(NSAttributedStringKey.foregroundColor, value: color, range: range)
     }
     
 }

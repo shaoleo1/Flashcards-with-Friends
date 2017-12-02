@@ -148,7 +148,7 @@
                                 <color key="barTintColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </searchBar>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h6S-k1-tKh">
+                            <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h6S-k1-tKh">
                                 <rect key="frame" x="0.0" y="488" width="321" height="40"/>
                                 <color key="backgroundColor" red="0.015686275440000001" green="0.34117648010000001" blue="0.81960785390000002" alpha="1" colorSpace="deviceRGB"/>
                                 <constraints>
@@ -162,7 +162,7 @@
                                     <action selector="sendButtonPressed:" destination="ObA-dk-sSI" eventType="touchUpInside" id="Irz-XC-OnY"/>
                                 </connections>
                             </button>
-                            <textField hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Term" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R4D-s3-LfN" userLabel="Term Text Box">
+                            <textField hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Term" textAlignment="center" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="R4D-s3-LfN" userLabel="Term Text Box">
                                 <rect key="frame" x="16" y="259" width="288" height="52"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="52" id="DOg-pf-uz2"/>
