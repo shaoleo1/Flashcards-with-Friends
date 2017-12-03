@@ -164,6 +164,7 @@
                             </button>
                             <textField hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Term" textAlignment="center" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="R4D-s3-LfN" userLabel="Term Text Box">
                                 <rect key="frame" x="16" y="259" width="288" height="52"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="52" id="DOg-pf-uz2"/>
                                 </constraints>
@@ -313,7 +314,7 @@
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.97202173223350252" green="0.97202173223350252" blue="0.97202173223350252" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="wBj-IB-dqy" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="17d-Ud-BEL"/>
                             <constraint firstItem="wBj-IB-dqy" firstAttribute="top" secondItem="LDy-ih-0nr" secondAttribute="top" constant="91" id="27y-Lx-k13"/>
