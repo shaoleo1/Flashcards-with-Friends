@@ -1,4 +1,5 @@
-# QuizletWithFriends
+# Quizlet With Friends
+### By Leo Shao, Vicky Zheng, and Alex Cohen
 
 The world’s most widely used study app is now even more competitive with the all new Quizlet with Friends iMessage app. Easily search up public study sets and send them to your friends in the form of a simple, yet challenging game!
 
