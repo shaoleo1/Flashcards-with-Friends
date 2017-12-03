@@ -37,8 +37,6 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * **Vicky Zheng** - [zhengvicky](https://github.com/zhengvicky)
 * **Alex Cohen** - [acohen1](https://github.com/acohen1)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
 ## License
 
 This project is not licensed. © 2017 Leo Shao. All rights reserved.
