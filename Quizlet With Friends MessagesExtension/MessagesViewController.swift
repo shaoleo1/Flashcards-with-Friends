@@ -426,13 +426,13 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
             let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: "\(termTextBox.text!) \(currentTermDefinition)")
             attributedString.setColorForText(textForAttribute: termTextBox.text!, withColor: UIColor(red: 211/255, green: 0/255, blue: 0/255, alpha: 1.0))
             attributedString.setColorForText(textForAttribute: currentTermDefinition, withColor: UIColor(red: 26/255, green: 196/255, blue: 0/255, alpha: 1.0))
+            termTextBox.attributedText = attributedString
             if (termTextBox.intrinsicContentSize.width > self.termTextBox.bounds.width) {
                 let alert = UIAlertController(title: "Correct Answer", message: currentTermDefinition, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: { _ in
                 }))
                 self.present(alert, animated: true, completion: nil)
             }
-            termTextBox.attributedText = attributedString
             opponentLastCorrect = false
         }
         termTextBox.isUserInteractionEnabled = false
