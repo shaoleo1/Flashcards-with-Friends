@@ -261,12 +261,10 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                                 self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
                                             } else {
                                                 // Fallback on earlier versions
-                                                DispatchQueue.main.sync {
                                                     self.definitionLabel.numberOfLines = 5
                                                     self.definitionLabel.lineBreakMode = .byClipping
                                                     self.definitionLabel.minimumScaleFactor = 0.25
                                                     self.definitionLabel.adjustsFontSizeToFitWidth = true
-                                                }
                                             }
                                             self.termTextBox.isHidden = false
                                             self.myScoreLabel.isHidden = false
@@ -301,7 +299,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     override func didStartSending(_ message: MSMessage, conversation: MSConversation) {
         super.didStartSending(message, conversation: conversation)
         // Called when the user taps the send button.
-        super.dismiss()
     }
     
     override func didCancelSending(_ message: MSMessage, conversation: MSConversation) {
@@ -365,50 +362,83 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
     
     private func composeMessage(quiz: Quiz) {
-        // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
-        // Creates a variable 'session' with the selected message's session.
         let session = conversation.selectedMessage?.session ?? MSSession()
-        var messageCaption = NSLocalizedString("Let's play a quiz game.", comment: "")
-        if (opponentLastCorrect == true) {
-            messageCaption = NSLocalizedString("I got '\(String(describing: self.definitionLabel.text!))' right.", comment: "")
-        } else if (opponentLastCorrect == false) {
-            messageCaption = NSLocalizedString("I got '\(String(describing: self.definitionLabel.text!))' wrong.", comment: "")
-        }
-        
-        // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
-        let layout = MSMessageTemplateLayout()
-        if (self.opponentLastCorrect == nil) {
+        if self.questionNumber - 1 != self.term_count || self.originalSender != conversation.localParticipantIdentifier {
+            // Creates a variable 'session' with the selected message's session.
+            var messageCaption = NSLocalizedString("Let's play a quiz game.", comment: "")
+            if (opponentLastCorrect == true) {
+                messageCaption = NSLocalizedString("I got '\(String(describing: self.definitionLabel.text!))' right.", comment: "")
+            } else if (opponentLastCorrect == false) {
+                messageCaption = NSLocalizedString("I got '\(String(describing: self.definitionLabel.text!))' wrong.", comment: "")
+            }
+            
+            // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
+            let layout = MSMessageTemplateLayout()
+            if (self.opponentLastCorrect == nil) {
+                layout.image = UIImage(named: "flashcardswf.png")
+            } else if (self.opponentLastCorrect)!{
+                layout.image = UIImage(named: "flashcardswfGreen.png")
+            } else if (!self.opponentLastCorrect!) {
+                layout.image = UIImage(named: "flashcardswfRed.png")
+            }
+            layout.imageTitle = "\(quiz.setTitle) by \(quiz.setAuthor)"
+            layout.caption = messageCaption
+            layout.subcaption = "\(quiz.term_count) terms"
+            
+            // Creates a variable 'components' that is a URLComponents object and creates a variable 'queryItems' with the key-value pairs for the URl query. Then it sets the component query items equal to that.
+            var components = URLComponents()
+            let queryItems = [URLQueryItem(name: "setTitle", value: quiz.setTitle), URLQueryItem(name: "setAuthor", value: quiz.setAuthor), URLQueryItem(name: "term_count", value: String(quiz.term_count)), URLQueryItem(name: "setID", value: String(quiz.setID)), URLQueryItem(name: "questionNumber", value: String(quiz.questionNumber)), URLQueryItem(name: "numberCorrect", value: String(quiz.numberCorrect)), URLQueryItem(name: "opponentNumberCorrect", value: String(quiz.opponentNumberCorrect)), URLQueryItem(name: "originalSender", value: String(describing: quiz.originalSender))]
+            components.queryItems = queryItems
+            
+            // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
+            let message = MSMessage(session: session)
+            message.layout = layout
+            message.url = components.url!
+            message.summaryText = "Flashcards With Friends"
+            message.accessibilityLabel = messageCaption
+            
+            // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
+            conversation.insert(message) { error in
+                if let error = error {
+                    print(error)
+                }
+            }
+        } else {
+            // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
+            // Creates a variable 'session' with the selected message's session.
+            let session = conversation.selectedMessage?.session ?? MSSession()
+            var messageCaption = NSLocalizedString("", comment: "")
+            if (self.numberCorrect > self.opponentNumberCorrect) {
+                messageCaption = NSLocalizedString("I win \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
+            } else if (self.numberCorrect < self.opponentNumberCorrect) {
+                messageCaption = NSLocalizedString("You win \(self.opponentNumberCorrect)-\(self.numberCorrect)!", comment: "")
+            } else {
+                messageCaption = NSLocalizedString("We tied \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
+            }
+            
+            // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
+            let layout = MSMessageTemplateLayout()
             layout.image = UIImage(named: "flashcardswf.png")
-        } else if (self.opponentLastCorrect)!{
-            layout.image = UIImage(named: "flashcardswfGreen.png")
-        } else if (!self.opponentLastCorrect!) {
-            layout.image = UIImage(named: "flashcardswfRed.png")
-        }
-        layout.imageTitle = "\(quiz.setTitle) by \(quiz.setAuthor)"
-        layout.caption = messageCaption
-        layout.subcaption = "\(quiz.term_count) terms"
-        
-        // Creates a variable 'components' that is a URLComponents object and creates a variable 'queryItems' with the key-value pairs for the URl query. Then it sets the component query items equal to that.
-        var components = URLComponents()
-        let queryItems = [URLQueryItem(name: "setTitle", value: quiz.setTitle), URLQueryItem(name: "setAuthor", value: quiz.setAuthor), URLQueryItem(name: "term_count", value: String(quiz.term_count)), URLQueryItem(name: "setID", value: String(quiz.setID)), URLQueryItem(name: "questionNumber", value: String(quiz.questionNumber)), URLQueryItem(name: "numberCorrect", value: String(quiz.numberCorrect)), URLQueryItem(name: "opponentNumberCorrect", value: String(quiz.opponentNumberCorrect)), URLQueryItem(name: "originalSender", value: String(describing: quiz.originalSender))]
-        components.queryItems = queryItems
-        
-        // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
-        let message = MSMessage(session: session)
-        message.layout = layout
-        message.url = components.url!
-        message.summaryText = "Flashcards With Friends"
-        message.accessibilityLabel = messageCaption
-        
-        // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
-        conversation.insert(message) { error in
-            if let error = error {
-                print(error)
+            layout.imageTitle = "\(self.setTitle) by \(self.setAuthor)"
+            layout.caption = messageCaption
+            layout.subcaption = "\(self.term_count) terms"
+            
+            // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
+            let message = MSMessage(session: session)
+            message.layout = layout
+            message.summaryText = "Flashcards With Friends"
+            message.accessibilityLabel = messageCaption
+            
+            // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
+            conversation.insert(message) { error in
+                if let error = error {
+                    print(error)
+                }
             }
         }
         
-        requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
+        dismiss()
     }
 
     @IBAction func setButtonPressed(_ sender: UIButton) {
@@ -462,48 +492,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         rightWrongResult.isHidden = false
         myScoreLabel.isHidden = false
         sendButton.isHidden = false
-        
-        if(self.questionNumber == self.term_count) {
-            if(self.originalSender == conversation.localParticipantIdentifier) {
-                // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
-                // Creates a variable 'session' with the selected message's session.
-                let session = conversation.selectedMessage?.session ?? MSSession()
-                var messageCaption = NSLocalizedString("", comment: "")
-                if (self.numberCorrect > self.opponentNumberCorrect) {
-                    messageCaption = NSLocalizedString("I win \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
-                } else if (self.numberCorrect < self.opponentNumberCorrect) {
-                    messageCaption = NSLocalizedString("You win \(self.opponentNumberCorrect)-\(self.numberCorrect)!", comment: "")
-                } else {
-                    messageCaption = NSLocalizedString("We tied \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
-                }
-                
-                // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
-                let layout = MSMessageTemplateLayout()
-                layout.image = UIImage(named: "flashcardswf.png")
-                layout.imageTitle = "\(self.setTitle) by \(self.setAuthor)"
-                layout.caption = messageCaption
-                layout.subcaption = "\(self.term_count) terms"
-                
-                // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
-                let message = MSMessage(session: session)
-                message.layout = layout
-                message.summaryText = "Flashcards With Friends"
-                message.accessibilityLabel = messageCaption
-                
-                // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
-                conversation.insert(message) { error in
-                    if let error = error {
-                        print(error)
-                    }
-                }
-                
-                requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
-            }
-        } else {
-            if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
-            let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
-            composeMessage(quiz: quiz)
-        }
         
         return true
     }
@@ -780,52 +768,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         rightWrongResult.isHidden = false
         myScoreLabel.isHidden = false
         sendButton.isHidden = false
-        
-        if(self.questionNumber == self.term_count) {
-            if(self.originalSender == conversation.localParticipantIdentifier) {
-                // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
-                // Creates a variable 'session' with the selected message's session.
-                let session = conversation.selectedMessage?.session ?? MSSession()
-                var messageCaption = NSLocalizedString("", comment: "")
-                if (self.numberCorrect > self.opponentNumberCorrect) {
-                    messageCaption = NSLocalizedString("I win \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
-                } else if (self.numberCorrect < self.opponentNumberCorrect) {
-                    messageCaption = NSLocalizedString("You win \(self.opponentNumberCorrect)-\(self.numberCorrect)!", comment: "")
-                } else {
-                    messageCaption = NSLocalizedString("We tied \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
-                }
-                
-                // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
-                let layout = MSMessageTemplateLayout()
-                layout.image = UIImage(named: "flashcardswf.png")
-                layout.imageTitle = "\(self.setTitle) by \(self.setAuthor)"
-                layout.caption = messageCaption
-                layout.subcaption = "\(self.term_count) terms"
-                
-                // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
-                let message = MSMessage(session: session)
-                message.layout = layout
-                message.summaryText = "Flashcards With Friends"
-                message.accessibilityLabel = messageCaption
-                
-                // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
-                conversation.insert(message) { error in
-                    if let error = error {
-                        print(error)
-                    }
-                }
-                
-                requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
-            } else {
-                if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
-                let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
-                composeMessage(quiz: quiz)
-            }
-        } else {
-            if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
-            let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
-            composeMessage(quiz: quiz)
-        }
     }
     
     @IBAction func mcButton2Pressed(_ sender: UIButton) {
@@ -866,52 +808,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         rightWrongResult.isHidden = false
         myScoreLabel.isHidden = false
         sendButton.isHidden = false
-        
-        if(self.questionNumber == self.term_count) {
-            if(self.originalSender == conversation.localParticipantIdentifier) {
-                // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
-                // Creates a variable 'session' with the selected message's session.
-                let session = conversation.selectedMessage?.session ?? MSSession()
-                var messageCaption = NSLocalizedString("", comment: "")
-                if (self.numberCorrect > self.opponentNumberCorrect) {
-                    messageCaption = NSLocalizedString("I win \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
-                } else if (self.numberCorrect < self.opponentNumberCorrect) {
-                    messageCaption = NSLocalizedString("You win \(self.opponentNumberCorrect)-\(self.numberCorrect)!", comment: "")
-                } else {
-                    messageCaption = NSLocalizedString("We tied \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
-                }
-                
-                // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
-                let layout = MSMessageTemplateLayout()
-                layout.image = UIImage(named: "flashcardswf.png")
-                layout.imageTitle = "\(self.setTitle) by \(self.setAuthor)"
-                layout.caption = messageCaption
-                layout.subcaption = "\(self.term_count) terms"
-                
-                // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
-                let message = MSMessage(session: session)
-                message.layout = layout
-                message.summaryText = "Flashcards With Friends"
-                message.accessibilityLabel = messageCaption
-                
-                // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
-                conversation.insert(message) { error in
-                    if let error = error {
-                        print(error)
-                    }
-                }
-                
-                requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
-            } else {
-                if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
-                let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
-                composeMessage(quiz: quiz)
-            }
-        } else {
-            if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
-            let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
-            composeMessage(quiz: quiz)
-        }
     }
     
     @IBAction func mcButton3Pressed(_ sender: UIButton) {
@@ -952,52 +848,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         rightWrongResult.isHidden = false
         myScoreLabel.isHidden = false
         sendButton.isHidden = false
-        
-        if(self.questionNumber == self.term_count) {
-            if(self.originalSender == conversation.localParticipantIdentifier) {
-                // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
-                // Creates a variable 'session' with the selected message's session.
-                let session = conversation.selectedMessage?.session ?? MSSession()
-                var messageCaption = NSLocalizedString("", comment: "")
-                if (self.numberCorrect > self.opponentNumberCorrect) {
-                    messageCaption = NSLocalizedString("I win \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
-                } else if (self.numberCorrect < self.opponentNumberCorrect) {
-                    messageCaption = NSLocalizedString("You win \(self.opponentNumberCorrect)-\(self.numberCorrect)!", comment: "")
-                } else {
-                    messageCaption = NSLocalizedString("We tied \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
-                }
-                
-                // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
-                let layout = MSMessageTemplateLayout()
-                layout.image = UIImage(named: "flashcardswf.png")
-                layout.imageTitle = "\(self.setTitle) by \(self.setAuthor)"
-                layout.caption = messageCaption
-                layout.subcaption = "\(self.term_count) terms"
-                
-                // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
-                let message = MSMessage(session: session)
-                message.layout = layout
-                message.summaryText = "Flashcards With Friends"
-                message.accessibilityLabel = messageCaption
-                
-                // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
-                conversation.insert(message) { error in
-                    if let error = error {
-                        print(error)
-                    }
-                }
-                
-                requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
-            } else {
-                if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
-                let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
-                composeMessage(quiz: quiz)
-            }
-        } else {
-            if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
-            let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
-            composeMessage(quiz: quiz)
-        }
     }
     
     @IBAction func mcButton4Pressed(_ sender: UIButton) {
@@ -1038,55 +888,11 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         rightWrongResult.isHidden = false
         myScoreLabel.isHidden = false
         sendButton.isHidden = false
-        
-        if(self.questionNumber == self.term_count) {
-            if(self.originalSender == conversation.localParticipantIdentifier) {
-                // Tries to create a variable 'conversation' that is equal to the active conversation. If it doesn't exist then it will throw an error.
-                // Creates a variable 'session' with the selected message's session.
-                let session = conversation.selectedMessage?.session ?? MSSession()
-                var messageCaption = NSLocalizedString("", comment: "")
-                if (self.numberCorrect > self.opponentNumberCorrect) {
-                    messageCaption = NSLocalizedString("I win \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
-                } else if (self.numberCorrect < self.opponentNumberCorrect) {
-                    messageCaption = NSLocalizedString("You win \(self.opponentNumberCorrect)-\(self.numberCorrect)!", comment: "")
-                } else {
-                    messageCaption = NSLocalizedString("We tied \(self.numberCorrect)-\(self.opponentNumberCorrect)!", comment: "")
-                }
-                
-                // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
-                let layout = MSMessageTemplateLayout()
-                layout.image = UIImage(named: "flashcardswf.png")
-                layout.imageTitle = "\(self.setTitle) by \(self.setAuthor)"
-                layout.caption = messageCaption
-                layout.subcaption = "\(self.term_count) terms"
-                
-                // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
-                let message = MSMessage(session: session)
-                message.layout = layout
-                message.summaryText = "Flashcards With Friends"
-                message.accessibilityLabel = messageCaption
-                
-                // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
-                conversation.insert(message) { error in
-                    if let error = error {
-                        print(error)
-                    }
-                }
-                
-                requestPresentationStyle(MSMessagesAppPresentationStyle.compact)
-            } else {
-                if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
-                let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
-                composeMessage(quiz: quiz)
-            }
-        } else {
-            if(self.originalSender == conversation.localParticipantIdentifier) { self.questionNumber += 1 }
-            let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
-            composeMessage(quiz: quiz)
-        }
     }
     
     @IBAction func sendButtonPressed(_ sender: UIButton) {
+        guard let conversation = activeConversation else { fatalError("Expected a conversation") }
+        if self.originalSender == conversation.localParticipantIdentifier && self.questionNumber != self.term_count { self.questionNumber += 1 }
         let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
         composeMessage(quiz: quiz)
     }
