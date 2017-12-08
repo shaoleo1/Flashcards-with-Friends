@@ -1,7 +1,9 @@
-# Quizlet With Friends
+# Flashcards With Friends
 ### By Leo Shao, Vicky Zheng, and Alex Cohen
 
-The world’s most widely used study app is now even more competitive with the all new Quizlet with Friends iMessage app. Easily search up public study sets and send them to your friends in the form of a simple, yet challenging game!
+Quizlet, the world’s most widely used study app, is now even more competitive with the all new Flashcards with Friends companion for iMessage. Easily search through thousands of public study sets and send them to your friends in the form of a simple, yet challenging game!
+
+Want to use your own study set? Create it using the Quizlet app and make sure it’s set to public. Then simply search it up and you’re good to go!
 
 - Search public Quizlet study sets to send to friends
 - Compete for points in a game automatically generated using the chosen study set
@@ -9,6 +11,12 @@ The world’s most widely used study app is now even more competitive with the a
 - Tap "I don't know" to bring up the multiple choice options
 - The game will progress through the study set sequentially until all terms are gone through
 - The player with the most points wins!
+
+****
+
+The creators of this app are in no way affiliated with the authors of any app, game, licensor, or trademark affiliated with Quizlet.
+
+Powered by Quizlet.
 
 ## Getting Started
 
