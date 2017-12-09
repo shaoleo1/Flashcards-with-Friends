@@ -365,7 +365,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     
         // Use this method to finalize any behaviors associated with the change in presentation style.
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
-        if rightWrongResult.text != "" && conversation.selectedMessage != nil && presentationStyle == .compact {
+        if conversation.selectedMessage != nil && presentationStyle == .compact {
             conversation.sendText("Flashcards With Friends: I tried to cheat by closing out of the app!", completionHandler: {
                 error -> Void in
             })
