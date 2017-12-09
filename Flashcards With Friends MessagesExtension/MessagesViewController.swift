@@ -405,9 +405,17 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
             // Creates a variable 'session' with the selected message's session.
             var messageCaption = NSLocalizedString("Let's play a quiz game.", comment: "")
             if (opponentLastCorrect == true) {
-                messageCaption = NSLocalizedString("I got '\(String(describing: self.definitionLabel.text!))' right.", comment: "")
+                if self.definitionLabel.text == "" {
+                    messageCaption = NSLocalizedString("I identified an image correctly.", comment: "")
+                } else {
+                    messageCaption = NSLocalizedString("I got '\(String(describing: self.definitionLabel.text!))' right.", comment: "")
+                }
             } else if (opponentLastCorrect == false) {
-                messageCaption = NSLocalizedString("I got '\(String(describing: self.definitionLabel.text!))' wrong.", comment: "")
+                if self.definitionLabel.text == "" {
+                    messageCaption = NSLocalizedString("I identified an image incorrectly.", comment: "")
+                } else {
+                    messageCaption = NSLocalizedString("I got '\(String(describing: self.definitionLabel.text!))' wrong.", comment: "")
+                }
             }
             
             // Creates a variable 'layout' that is a MSMessageTemplateLayout object and sets its image, image title, caption, and subcaption.
