@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -309,6 +308,12 @@
                                     <action selector="sendButtonPressed:" destination="ObA-dk-sSI" eventType="touchUpInside" id="Irz-XC-OnY"/>
                                 </connections>
                             </button>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YlC-jP-Wa6">
+                                <rect key="frame" x="16" y="111" width="288" height="143"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="143" id="8ta-NZ-aRM"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.97202173223350252" green="0.97202173223350252" blue="0.97202173223350252" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -350,10 +355,12 @@
                             <constraint firstItem="WJi-wl-l9B" firstAttribute="top" secondItem="sF1-6R-x6n" secondAttribute="bottom" constant="8" id="R8N-Tk-FNm"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="LwQ-XH-3Sg" secondAttribute="trailing" constant="16" id="RWW-Hd-KeH"/>
                             <constraint firstItem="6nK-UA-WCb" firstAttribute="top" secondItem="BvZ-33-xFx" secondAttribute="bottom" constant="8" id="S1X-oI-pE5"/>
+                            <constraint firstItem="YlC-jP-Wa6" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="SVD-pY-d6G"/>
                             <constraint firstItem="sF1-6R-x6n" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="TZU-19-Ayg"/>
                             <constraint firstItem="07c-Kz-ctS" firstAttribute="top" secondItem="LDy-ih-0nr" secondAttribute="top" constant="10" id="UKt-lO-F6u"/>
                             <constraint firstItem="uQs-Xr-VMT" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="UMb-ow-cGL"/>
                             <constraint firstItem="A3v-Oa-OIz" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="UeM-BS-IPk"/>
+                            <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="YlC-jP-Wa6" secondAttribute="trailing" constant="16" id="UgN-Rg-g2H"/>
                             <constraint firstItem="sF1-6R-x6n" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="Uol-UC-wAb"/>
                             <constraint firstItem="LwQ-XH-3Sg" firstAttribute="top" secondItem="WJi-wl-l9B" secondAttribute="bottom" constant="8" id="VFz-1s-qnL"/>
                             <constraint firstItem="h6S-k1-tKh" firstAttribute="trailing" secondItem="LDy-ih-0nr" secondAttribute="trailing" constant="1" id="WaA-0N-UZn"/>
@@ -381,6 +388,7 @@
                             <constraint firstItem="l9l-lq-vfB" firstAttribute="top" secondItem="uQs-Xr-VMT" secondAttribute="bottom" constant="8" id="kAE-O3-qo9"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="drg-Bn-ejt" secondAttribute="trailing" constant="8" id="kUR-uR-yFA"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="Tt3-zF-1Bp" secondAttribute="trailing" id="kgu-d1-dU5"/>
+                            <constraint firstItem="YlC-jP-Wa6" firstAttribute="top" secondItem="LDy-ih-0nr" secondAttribute="top" constant="91" id="m2y-f8-MeV"/>
                             <constraint firstItem="3MA-7Z-ww9" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="m4Q-S7-pSy"/>
                             <constraint firstItem="UlZ-vd-I1s" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="282" id="mU3-Sg-pVd"/>
                             <constraint firstItem="pEG-Te-0A0" firstAttribute="top" secondItem="wBj-IB-dqy" secondAttribute="bottom" constant="8" id="mb2-ac-6yx"/>
@@ -420,6 +428,7 @@
                         <outlet property="buttonSetTwo" destination="WJi-wl-l9B" id="ezM-UR-3xd"/>
                         <outlet property="definitionLabel" destination="qQY-on-8vh" id="IZx-L8-6Lf"/>
                         <outlet property="idkButton" destination="tWb-4e-l1D" id="wyg-Ds-xPy"/>
+                        <outlet property="imageView" destination="YlC-jP-Wa6" id="rNq-q7-01H"/>
                         <outlet property="labelScrollView" destination="wBj-IB-dqy" id="cXy-pQ-MhP"/>
                         <outlet property="mcButton1" destination="uQs-Xr-VMT" id="HuR-Cf-d2s"/>
                         <outlet property="mcButton2" destination="pEG-Te-0A0" id="JTF-IH-Bah"/>

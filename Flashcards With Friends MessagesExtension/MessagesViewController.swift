@@ -39,6 +39,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBOutlet weak var mcButton4: UIButton!
     @IBOutlet weak var idkButton: UIButton!
     @IBOutlet weak var labelScrollView: UIScrollView!
+    @IBOutlet weak var imageView: UIImageView!
     
     private var setTitle = ""
     private var setAuthor = ""
@@ -134,21 +135,39 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                             self.originalSender = UUID(uuidString: self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "originalSender")!)
                                             // Uses the main thread--required for UI changes.
                                             guard let conversation = self.activeConversation else { fatalError("Expected a conversation.") }
-                                            DispatchQueue.main.async() {
-                                                // Sets the term label to the term we just got and makes the table and text box visible.
-                                                self.definitionLabel.text = definition
-                                                self.definitionLabel.isHidden = false
-                                                self.labelScrollView.isHidden = false
-                                                if #available(iOSApplicationExtension 11.0, *) {
-                                                    self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
-                                                } else {
-                                                    // Fallback on earlier versions
-                                                    DispatchQueue.main.sync {
-                                                        self.definitionLabel.numberOfLines = 5
-                                                        self.definitionLabel.lineBreakMode = .byClipping
-                                                        self.definitionLabel.minimumScaleFactor = 0.25
-                                                        self.definitionLabel.adjustsFontSizeToFitWidth = true
+                                            DispatchQueue.main.async {
+                                                if definition == "" {
+                                                    if let imageDict = currentTerm["image"] as? [String: Any] {
+                                                        if let imageURL = imageDict["url"] as? String {
+                                                            let session = URLSession(configuration: .default)
+                                                            let downloadImageTask = session.dataTask(with: URL(string: imageURL)!) { (data, response, error) in
+                                                                if let e = error {
+                                                                    print("Error downloading image: \(e)")
+                                                                } else {
+                                                                    if let res = response as? HTTPURLResponse {
+                                                                        print("Downloaded image with response code \(res.statusCode)")
+                                                                        if let imageData = data {
+                                                                            let image = UIImage(data: imageData)
+                                                                            DispatchQueue.main.async {
+                                                                                self.imageView.image = image
+                                                                                self.imageView.isHidden = false
+                                                                            }
+                                                                        } else {
+                                                                            print("Couldn't get image: Image is nil")
+                                                                        }
+                                                                    } else {
+                                                                        print("Couldn't get response code")
+                                                                    }
+                                                                }
+                                                            }
+                                                            downloadImageTask.resume()
+                                                        }
                                                     }
+                                                } else {
+                                                    self.definitionLabel.text = definition
+                                                    self.definitionLabel.isHidden = false
+                                                    self.labelScrollView.isHidden = false
+                                                    self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
                                                 }
                                                 self.termTextBox.isHidden = false
                                                 self.myScoreLabel.isHidden = false
@@ -252,19 +271,39 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                         self.originalSender = UUID(uuidString: self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "originalSender")!)
                                         // Uses the main thread--required for UI changes.
                                         guard let conversation = self.activeConversation else { fatalError("Expected a conversation.") }
-                                        DispatchQueue.main.async() {
-                                            // Sets the term label to the term we just got and makes the table and text box visible.
-                                            self.definitionLabel.text = definition
-                                            self.definitionLabel.isHidden = false
-                                            self.labelScrollView.isHidden = false
-                                            if #available(iOSApplicationExtension 11.0, *) {
-                                                self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
+                                        DispatchQueue.main.async {
+                                            if definition == "" {
+                                                if let imageDict = currentTerm["image"] as? [String: Any] {
+                                                    if let imageURL = imageDict["url"] as? String {
+                                                        let session = URLSession(configuration: .default)
+                                                        let downloadImageTask = session.dataTask(with: URL(string: imageURL)!) { (data, response, error) in
+                                                            if let e = error {
+                                                                print("Error downloading image: \(e)")
+                                                            } else {
+                                                                if let res = response as? HTTPURLResponse {
+                                                                    print("Downloaded image with response code \(res.statusCode)")
+                                                                    if let imageData = data {
+                                                                        let image = UIImage(data: imageData)
+                                                                        DispatchQueue.main.async {
+                                                                            self.imageView.image = image
+                                                                            self.imageView.isHidden = false
+                                                                        }
+                                                                    } else {
+                                                                        print("Couldn't get image: Image is nil")
+                                                                    }
+                                                                } else {
+                                                                    print("Couldn't get response code")
+                                                                }
+                                                            }
+                                                        }
+                                                        downloadImageTask.resume()
+                                                    }
+                                                }
                                             } else {
-                                                // Fallback on earlier versions
-                                                    self.definitionLabel.numberOfLines = 5
-                                                    self.definitionLabel.lineBreakMode = .byClipping
-                                                    self.definitionLabel.minimumScaleFactor = 0.25
-                                                    self.definitionLabel.adjustsFontSizeToFitWidth = true
+                                                self.definitionLabel.text = definition
+                                                self.definitionLabel.isHidden = false
+                                                self.labelScrollView.isHidden = false
+                                                self.labelScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.definitionLabel.bottomAnchor).isActive = true
                                             }
                                             self.termTextBox.isHidden = false
                                             self.myScoreLabel.isHidden = false
@@ -307,17 +346,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     
         // Use this to clean up state related to the deleted message.
         if conversation.selectedMessage != nil {
-            if #available(iOSApplicationExtension 11.0, *) {
-                conversation.sendText("Flashcards With Friends: I cheated by deleting the message!", completionHandler: {
-                    error -> Void in
-                })
-            } else {
-                // Fallback on earlier versions
-                let alert = UIAlertController(title: "Warning", message: currentTermDefinition, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: NSLocalizedString("Don't cheat!", comment: "Default action"), style: .`default`, handler: { _ in
-                }))
-                self.present(alert, animated: true, completion: nil)
-            }
+            conversation.sendText("Flashcards With Friends: I cheated by deleting the message!", completionHandler: {
+                error -> Void in
+            })
         }
     }
     
@@ -333,6 +364,12 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         // Called after the extension transitions to a new presentation style.
     
         // Use this method to finalize any behaviors associated with the change in presentation style.
+        guard let conversation = activeConversation else { fatalError("Expected a conversation") }
+        if rightWrongResult.text != "" && conversation.selectedMessage != nil && presentationStyle == .compact {
+            conversation.sendText("Flashcards With Friends: I tried to cheat by closing out of the app!", completionHandler: {
+                error -> Void in
+            })
+        }
     }
     
     // Function to get the URL query parameters from a URl string. Returns the first value found for the parameter key given.
@@ -399,7 +436,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
             message.accessibilityLabel = messageCaption
             
             // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
-            conversation.insert(message) { error in
+            conversation.send(message) { error in
                 if let error = error {
                     print(error)
                 }
@@ -431,7 +468,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
             message.accessibilityLabel = messageCaption
             
             // Tries to insert the message we just created into the user's message application to send. Throws an error if there's an error.
-            conversation.insert(message) { error in
+            conversation.send(message) { error in
                 if let error = error {
                     print(error)
                 }
@@ -892,7 +929,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     
     @IBAction func sendButtonPressed(_ sender: UIButton) {
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
-        if self.originalSender == conversation.localParticipantIdentifier && self.questionNumber != self.term_count { self.questionNumber += 1 }
+        if self.originalSender == conversation.localParticipantIdentifier && self.questionNumber - 1 != self.term_count { self.questionNumber += 1 }
         let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
         composeMessage(quiz: quiz)
     }
