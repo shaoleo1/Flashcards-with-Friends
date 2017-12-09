@@ -496,6 +496,8 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         termTextBox.resignFirstResponder()
+        termTextBox.isUserInteractionEnabled = false
+        idkButton.isUserInteractionEnabled = false
         
         guard let conversation = activeConversation else { return false }
         if(termTextBox.text?.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == currentTermDefinition.lowercased()) {
@@ -531,8 +533,6 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
             }
             opponentLastCorrect = false
         }
-        termTextBox.isUserInteractionEnabled = false
-        idkButton.isUserInteractionEnabled = false
         opponentScoreLabel.isHidden = false
         rightWrongResult.isHidden = false
         myScoreLabel.isHidden = false
@@ -776,6 +776,11 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
     
     @IBAction func mcButton1Pressed(_ sender: UIButton) {
+        mcButton1.isUserInteractionEnabled = false
+        mcButton2.isUserInteractionEnabled = false
+        mcButton3.isUserInteractionEnabled = false
+        mcButton4.isUserInteractionEnabled = false
+        
         guard let conversation = activeConversation else { fatalError("Expected conversation.") }
         if (self.mcCorrectButton == 0) {
             if(self.originalSender == conversation.localParticipantIdentifier) {
@@ -816,6 +821,11 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
     
     @IBAction func mcButton2Pressed(_ sender: UIButton) {
+        mcButton1.isUserInteractionEnabled = false
+        mcButton2.isUserInteractionEnabled = false
+        mcButton3.isUserInteractionEnabled = false
+        mcButton4.isUserInteractionEnabled = false
+        
         guard let conversation = activeConversation else { fatalError("Expected conversation.") }
         if (self.mcCorrectButton == 1) {
             if(self.originalSender == conversation.localParticipantIdentifier) {
@@ -856,6 +866,11 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
     
     @IBAction func mcButton3Pressed(_ sender: UIButton) {
+        mcButton1.isUserInteractionEnabled = false
+        mcButton2.isUserInteractionEnabled = false
+        mcButton3.isUserInteractionEnabled = false
+        mcButton4.isUserInteractionEnabled = false
+        
         guard let conversation = activeConversation else { fatalError("Expected conversation.") }
         if (self.mcCorrectButton == 2) {
             if(self.originalSender == conversation.localParticipantIdentifier) {
@@ -896,6 +911,11 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
     
     @IBAction func mcButton4Pressed(_ sender: UIButton) {
+        mcButton1.isUserInteractionEnabled = false
+        mcButton2.isUserInteractionEnabled = false
+        mcButton3.isUserInteractionEnabled = false
+        mcButton4.isUserInteractionEnabled = false
+        
         guard let conversation = activeConversation else { fatalError("Expected conversation.") }
         if (self.mcCorrectButton == 3) {
             if(self.originalSender == conversation.localParticipantIdentifier) {
