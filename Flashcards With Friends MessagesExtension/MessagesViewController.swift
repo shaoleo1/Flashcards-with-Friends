@@ -12,6 +12,7 @@ import Messages
 
 class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, UITextFieldDelegate {
     
+    
     // Outlets of the screen elements such as buttons, text boxes, search bars, and labels. These are variables connected to the storyboard that we can use to access these elements on the screen.
     @IBOutlet weak var searchBox: UISearchBar!
     @IBOutlet weak var buttonSetOne: UIButton!
@@ -40,6 +41,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBOutlet weak var idkButton: UIButton!
     @IBOutlet weak var labelScrollView: UIScrollView!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var unlockTimed: UIButton!
     
     private var setTitle = ""
     private var setAuthor = ""
@@ -62,7 +64,10 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view.
+        IAPService.shared.getProducts()
+        
         searchBox.delegate = self
         termTextBox.delegate = self
         
@@ -365,10 +370,12 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     
         // Use this method to finalize any behaviors associated with the change in presentation style.
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
-        if conversation.selectedMessage != nil && presentationStyle == .compact {
-            conversation.sendText("Flashcards With Friends: I tried to cheat by closing out of the app!", completionHandler: {
-                error -> Void in
-            })
+        if let message = conversation.selectedMessage {
+            if message.senderParticipantIdentifier != conversation.localParticipantIdentifier && presentationStyle == .compact {
+                conversation.sendText("Flashcards With Friends: I tried to cheat by closing out of the app!", completionHandler: {
+                    error -> Void in
+                })
+            }
         }
     }
     
@@ -960,6 +967,10 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         if self.originalSender == conversation.localParticipantIdentifier && self.questionNumber - 1 != self.term_count { self.questionNumber += 1 }
         let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
         composeMessage(quiz: quiz)
+    }
+    
+    @IBAction func unlockTimedPressed(_ sender: UIButton) {
+        IAPService.shared.purchase(product: .timed)
     }
     
 }

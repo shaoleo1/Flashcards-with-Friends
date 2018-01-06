@@ -14,9 +14,11 @@
 		162538621FB60E010067EC67 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162538611FB60E010067EC67 /* MessagesViewController.swift */; };
 		162538651FB60E010067EC67 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 162538631FB60E010067EC67 /* MainInterface.storyboard */; };
 		162538671FB60E010067EC67 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 162538661FB60E010067EC67 /* Assets.xcassets */; };
-		163ECC8D1FD7430100858EDC /* flashcardswfGreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 163ECC8A1FD7430100858EDC /* flashcardswfGreen.png */; };
-		163ECC8E1FD7430100858EDC /* flashcardswf.png in Resources */ = {isa = PBXBuildFile; fileRef = 163ECC8B1FD7430100858EDC /* flashcardswf.png */; };
-		163ECC8F1FD7430100858EDC /* flashcardswfRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 163ECC8C1FD7430100858EDC /* flashcardswfRed.png */; };
+		1651855A1FFFDD2400477518 /* flashcardswfRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 165185571FFFDD2400477518 /* flashcardswfRed.png */; };
+		1651855B1FFFDD2400477518 /* flashcardswf.png in Resources */ = {isa = PBXBuildFile; fileRef = 165185581FFFDD2400477518 /* flashcardswf.png */; };
+		1651855C1FFFDD2400477518 /* flashcardswfGreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 165185591FFFDD2400477518 /* flashcardswfGreen.png */; };
+		16EC86981FFFFAF8000DBADA /* IAPProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC86971FFFFAF8000DBADA /* IAPProduct.swift */; };
+		16EC869A1FFFFB03000DBADA /* IAPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC86991FFFFB03000DBADA /* IAPService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,9 +56,11 @@
 		162538641FB60E010067EC67 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		162538661FB60E010067EC67 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		162538681FB60E010067EC67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		163ECC8A1FD7430100858EDC /* flashcardswfGreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flashcardswfGreen.png; sourceTree = "<group>"; };
-		163ECC8B1FD7430100858EDC /* flashcardswf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flashcardswf.png; sourceTree = "<group>"; };
-		163ECC8C1FD7430100858EDC /* flashcardswfRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flashcardswfRed.png; sourceTree = "<group>"; };
+		165185571FFFDD2400477518 /* flashcardswfRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = flashcardswfRed.png; path = "../../../Downloads/Flashcards with Friends-2/main 2/flashcardswfRed.png"; sourceTree = "<group>"; };
+		165185581FFFDD2400477518 /* flashcardswf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = flashcardswf.png; path = "../../../Downloads/Flashcards with Friends-2/main 2/flashcardswf.png"; sourceTree = "<group>"; };
+		165185591FFFDD2400477518 /* flashcardswfGreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = flashcardswfGreen.png; path = "../../../Downloads/Flashcards with Friends-2/main 2/flashcardswfGreen.png"; sourceTree = "<group>"; };
+		16EC86971FFFFAF8000DBADA /* IAPProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPProduct.swift; sourceTree = "<group>"; };
+		16EC86991FFFFB03000DBADA /* IAPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,11 +114,13 @@
 		162538601FB60E010067EC67 /* Flashcards With Friends MessagesExtension */ = {
 			isa = PBXGroup;
 			children = (
-				163ECC8B1FD7430100858EDC /* flashcardswf.png */,
-				163ECC8A1FD7430100858EDC /* flashcardswfGreen.png */,
-				163ECC8C1FD7430100858EDC /* flashcardswfRed.png */,
+				165185581FFFDD2400477518 /* flashcardswf.png */,
+				165185591FFFDD2400477518 /* flashcardswfGreen.png */,
+				165185571FFFDD2400477518 /* flashcardswfRed.png */,
 				160DADA31FB61D090051ADA9 /* search.png */,
 				162538611FB60E010067EC67 /* MessagesViewController.swift */,
+				16EC86971FFFFAF8000DBADA /* IAPProduct.swift */,
+				16EC86991FFFFB03000DBADA /* IAPService.swift */,
 				162538631FB60E010067EC67 /* MainInterface.storyboard */,
 				162538661FB60E010067EC67 /* Assets.xcassets */,
 				162538681FB60E010067EC67 /* Info.plist */,
@@ -171,11 +177,17 @@
 				TargetAttributes = {
 					1625384E1FB60E000067EC67 = {
 						CreatedOnToolsVersion = 9.0.1;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 					162538581FB60E010067EC67 = {
 						CreatedOnToolsVersion = 9.0.1;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -211,9 +223,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				163ECC8F1FD7430100858EDC /* flashcardswfRed.png in Resources */,
-				163ECC8D1FD7430100858EDC /* flashcardswfGreen.png in Resources */,
-				163ECC8E1FD7430100858EDC /* flashcardswf.png in Resources */,
+				1651855C1FFFDD2400477518 /* flashcardswfGreen.png in Resources */,
+				1651855A1FFFDD2400477518 /* flashcardswfRed.png in Resources */,
+				1651855B1FFFDD2400477518 /* flashcardswf.png in Resources */,
 				162538671FB60E010067EC67 /* Assets.xcassets in Resources */,
 				160DADA41FB61D090051ADA9 /* search.png in Resources */,
 				162538651FB60E010067EC67 /* MainInterface.storyboard in Resources */,
@@ -227,7 +239,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16EC86981FFFFAF8000DBADA /* IAPProduct.swift in Sources */,
 				162538621FB60E010067EC67 /* MessagesViewController.swift in Sources */,
+				16EC869A1FFFFB03000DBADA /* IAPService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +380,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GMP5EEF274;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Flashcards With Friends MessagesExtension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -383,6 +401,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GMP5EEF274;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Flashcards With Friends MessagesExtension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -399,12 +421,15 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GMP5EEF274;
 				INFOPLIST_FILE = "Flashcards With Friends/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.leoshao.Flashcards-With-Friends";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -415,10 +440,12 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GMP5EEF274;
 				INFOPLIST_FILE = "Flashcards With Friends/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.leoshao.Flashcards-With-Friends";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
