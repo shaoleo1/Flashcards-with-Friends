@@ -2,7 +2,7 @@
 //  IAPService.swift
 //  Flashcards With Friends MessagesExtension
 //
-//  Created by Leo Shao on 1/5/18.
+//  Created by Leo Shao on 1/20/18.
 //  Copyright © 2018 Leo Shao. All rights reserved.
 //
 

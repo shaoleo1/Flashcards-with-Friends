@@ -326,6 +326,15 @@
                                     <action selector="sendButtonPressed:" destination="ObA-dk-sSI" eventType="touchUpInside" id="Irz-XC-OnY"/>
                                 </connections>
                             </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cq4-BB-04y">
+                                <rect key="frame" x="154.66666666666666" y="38" width="11.333333333333343" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="Pz1-rU-n8M"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.97202173223350252" green="0.97202173223350252" blue="0.97202173223350252" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -334,6 +343,7 @@
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="hcH-5B-gAm" secondAttribute="trailing" constant="230" id="2K3-Cj-E48"/>
                             <constraint firstItem="wBj-IB-dqy" firstAttribute="top" secondItem="drg-Bn-ejt" secondAttribute="bottom" constant="45" id="2Pn-5Q-QmD"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="bottom" secondItem="h6S-k1-tKh" secondAttribute="bottom" id="2mL-4g-P5a"/>
+                            <constraint firstItem="Cq4-BB-04y" firstAttribute="centerX" secondItem="LDy-ih-0nr" secondAttribute="centerX" id="4DQ-M2-Nk6"/>
                             <constraint firstItem="Wzd-bg-dP5" firstAttribute="top" secondItem="YM8-GM-xo0" secondAttribute="bottom" constant="40" id="4ar-ST-gTm"/>
                             <constraint firstItem="uQs-Xr-VMT" firstAttribute="width" secondItem="pEG-Te-0A0" secondAttribute="width" id="53l-36-XvI"/>
                             <constraint firstItem="A3v-Oa-OIz" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="5j9-Qd-l0D"/>
@@ -377,6 +387,7 @@
                             <constraint firstItem="LwQ-XH-3Sg" firstAttribute="top" secondItem="WJi-wl-l9B" secondAttribute="bottom" constant="8" id="VFz-1s-qnL"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="bottom" secondItem="TsE-pL-o8W" secondAttribute="bottom" constant="11" id="VQx-o3-VmS"/>
                             <constraint firstItem="h6S-k1-tKh" firstAttribute="trailing" secondItem="LDy-ih-0nr" secondAttribute="trailing" constant="1" id="WaA-0N-UZn"/>
+                            <constraint firstItem="Cq4-BB-04y" firstAttribute="top" secondItem="LDy-ih-0nr" secondAttribute="top" constant="18" id="WwD-ei-gVn"/>
                             <constraint firstItem="LDy-ih-0nr" firstAttribute="trailing" secondItem="x1V-CS-C2Y" secondAttribute="trailing" constant="16" id="Xpi-Nn-qcn"/>
                             <constraint firstItem="l9l-lq-vfB" firstAttribute="leading" secondItem="LDy-ih-0nr" secondAttribute="leading" constant="16" id="Yk4-as-XmN"/>
                             <constraint firstItem="drg-Bn-ejt" firstAttribute="leading" secondItem="Tt3-zF-1Bp" secondAttribute="trailing" constant="-87" id="Ylh-Qr-Ldn"/>
@@ -457,6 +468,7 @@
                         <outlet property="searchBox" destination="Tt3-zF-1Bp" id="Xld-nr-vOC"/>
                         <outlet property="sendButton" destination="h6S-k1-tKh" id="dUk-4O-MZ9"/>
                         <outlet property="termTextBox" destination="R4D-s3-LfN" id="Z6N-7P-cg2"/>
+                        <outlet property="timerLabel" destination="Cq4-BB-04y" id="YKl-V2-ICN"/>
                         <outlet property="unlockTimed" destination="TsE-pL-o8W" id="1cB-LW-qss"/>
                         <outlet property="youLabel" destination="UlZ-vd-I1s" id="QRD-xQ-XZo"/>
                     </connections>

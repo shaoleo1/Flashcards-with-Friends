@@ -2,8 +2,8 @@
 //  MessagesViewController.swift
 //  Flashcards With Friends MessagesExtension
 //
-//  Created by Leo Shao on 11/10/17.
-//  Copyright © 2017 Leo Shao. All rights reserved.
+//  Created by Leo Shao on 1/19/18.
+//  Copyright © 2018 Leo Shao. All rights reserved.
 //
 
 import Foundation
@@ -42,6 +42,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBOutlet weak var labelScrollView: UIScrollView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var unlockTimed: UIButton!
+    @IBOutlet weak var timerLabel: UILabel!
     
     private var setTitle = ""
     private var setAuthor = ""
@@ -53,6 +54,11 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     private var questionNumber = 1
     private var opponentLastCorrect: Bool?
     private var originalSender: UUID? = nil
+    private var timer: Int = 0
+    
+    private var seconds: Int = 0
+    
+    private var gameTimer = Timer()
     
     // Declares an array of the study set IDs, titles, authors, and term counts corresponding to the appropriate buttons for looping.
     var buttonSetIDs = [Int?](repeating: nil, count: 10)
@@ -138,6 +144,12 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                             self.opponentNumberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "opponentNumberCorrect")!)!
                                             self.questionNumber = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)!
                                             self.originalSender = UUID(uuidString: self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "originalSender")!)
+                                            self.timer = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "timer")!)!
+                                            if self.timer > 0 {
+                                                self.seconds = self.timer
+                                                self.timerLabel.text = String(self.timer)
+                                                self.timerLabel.isHidden = false
+                                            }
                                             // Uses the main thread--required for UI changes.
                                             guard let conversation = self.activeConversation else { fatalError("Expected a conversation.") }
                                             DispatchQueue.main.async {
@@ -188,6 +200,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                                 } else {
                                                     self.myScoreLabel.text = String(self.opponentNumberCorrect)
                                                     self.opponentScoreLabel.text = String(self.numberCorrect)
+                                                }
+                                                if self.timer > 0 {
+                                                    self.gameTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(MessagesViewController.updateTimer)), userInfo: nil, repeats: true)
                                                 }
                                             }
                                             // It will then iterate through the for loop again until all terms have been looped through.
@@ -274,6 +289,12 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                         self.opponentNumberCorrect = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "opponentNumberCorrect")!)!
                                         self.questionNumber = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "questionNumber")!)!
                                         self.originalSender = UUID(uuidString: self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "originalSender")!)
+                                        self.timer = Int(self.getQueryStringParameter(url: (message.url?.absoluteString)!, param: "timer")!)!
+                                        if self.timer > 0 {
+                                            self.seconds = self.timer
+                                            self.timerLabel.text = String(self.timer)
+                                            self.timerLabel.isHidden = false
+                                        }
                                         // Uses the main thread--required for UI changes.
                                         guard let conversation = self.activeConversation else { fatalError("Expected a conversation.") }
                                         DispatchQueue.main.async {
@@ -324,6 +345,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
                                             } else {
                                                 self.myScoreLabel.text = String(self.opponentNumberCorrect)
                                                 self.opponentScoreLabel.text = String(self.numberCorrect)
+                                            }
+                                            if self.timer > 0 {
+                                                self.gameTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(MessagesViewController.updateTimer)), userInfo: nil, repeats: true)
                                             }
                                         }
                                         // It will then iterate through the for loop again until all terms have been looped through.
@@ -395,6 +419,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         var numberCorrect: Int
         var opponentNumberCorrect: Int
         let originalSender: UUID
+        let timer: Int
     }
     
     // Function to check if the user that selected the message is the same as the user that sent it. Returns a boolean.
@@ -440,7 +465,7 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
             
             // Creates a variable 'components' that is a URLComponents object and creates a variable 'queryItems' with the key-value pairs for the URl query. Then it sets the component query items equal to that.
             var components = URLComponents()
-            let queryItems = [URLQueryItem(name: "setTitle", value: quiz.setTitle), URLQueryItem(name: "setAuthor", value: quiz.setAuthor), URLQueryItem(name: "term_count", value: String(quiz.term_count)), URLQueryItem(name: "setID", value: String(quiz.setID)), URLQueryItem(name: "questionNumber", value: String(quiz.questionNumber)), URLQueryItem(name: "numberCorrect", value: String(quiz.numberCorrect)), URLQueryItem(name: "opponentNumberCorrect", value: String(quiz.opponentNumberCorrect)), URLQueryItem(name: "originalSender", value: String(describing: quiz.originalSender))]
+            let queryItems = [URLQueryItem(name: "setTitle", value: quiz.setTitle), URLQueryItem(name: "setAuthor", value: quiz.setAuthor), URLQueryItem(name: "term_count", value: String(quiz.term_count)), URLQueryItem(name: "setID", value: String(quiz.setID)), URLQueryItem(name: "questionNumber", value: String(quiz.questionNumber)), URLQueryItem(name: "numberCorrect", value: String(quiz.numberCorrect)), URLQueryItem(name: "opponentNumberCorrect", value: String(quiz.opponentNumberCorrect)), URLQueryItem(name: "originalSender", value: String(describing: quiz.originalSender)), URLQueryItem(name: "timer", value: String(quiz.timer))]
             components.queryItems = queryItems
             
             // Creates a variable 'message' that is a MSMessage object and sets its layout and url to the variables we just created above as well as the summary text and accessibility label.
@@ -494,17 +519,39 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     }
 
     @IBAction func setButtonPressed(_ sender: UIButton) {
-        // Creates a Quiz structure containing all the data necessary.
-        guard let conversation = activeConversation else { fatalError("Expected a conversation") }
-        let quiz = Quiz(setTitle: buttonSetTitles[sender.tag - 1]!, setAuthor: buttonSetAuthors[sender.tag - 1]!, term_count: buttonSetTermCounts[sender.tag - 1]!, setID: buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0, opponentNumberCorrect: 0, originalSender: conversation.localParticipantIdentifier)
-        // Calls the composeMessage function with the 'quiz'.
-        composeMessage(quiz: quiz)
+        let alert = UIAlertController(title: "Select a Gamemode", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Normal", comment: "Normal gamemode"), style: .default, handler: { _ in
+            // Creates a Quiz structure containing all the data necessary.
+            guard let conversation = self.activeConversation else { fatalError("Expected a conversation") }
+            let quiz = Quiz(setTitle: self.buttonSetTitles[sender.tag - 1]!, setAuthor: self.buttonSetAuthors[sender.tag - 1]!, term_count: self.buttonSetTermCounts[sender.tag - 1]!, setID: self.buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0, opponentNumberCorrect: 0, originalSender: conversation.localParticipantIdentifier, timer: 0)
+            // Calls the composeMessage function with the 'quiz'.
+            self.composeMessage(quiz: quiz)
+        }))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Timed", comment: "Timed gamemode"), style: .default, handler: { _ in
+            let alert = UIAlertController(title: "How Long?", message: nil, preferredStyle: .alert)
+            alert.addTextField { (textField) in
+                textField.placeholder = "Timer length in seconds"
+            }
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Done", comment: "Confirm"), style: .default, handler: { _ in
+                if let time = Int((alert.textFields?.first?.text)!) {
+                    guard let conversation = self.activeConversation else { fatalError("Expected a conversation") }
+                    let quiz = Quiz(setTitle: self.buttonSetTitles[sender.tag - 1]!, setAuthor: self.buttonSetAuthors[sender.tag - 1]!, term_count: self.buttonSetTermCounts[sender.tag - 1]!, setID: self.buttonSetIDs[sender.tag - 1]!, questionNumber: 1, numberCorrect: 0, opponentNumberCorrect: 0, originalSender: conversation.localParticipantIdentifier, timer: time)
+                    // Calls the composeMessage function with the 'quiz'.
+                    self.composeMessage(quiz: quiz)
+                }
+            }))
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         termTextBox.resignFirstResponder()
         termTextBox.isUserInteractionEnabled = false
         idkButton.isUserInteractionEnabled = false
+        gameTimer.invalidate()
+        timerLabel.isHidden = true
         
         guard let conversation = activeConversation else { return false }
         if(termTextBox.text?.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == currentTermDefinition.lowercased()) {
@@ -788,6 +835,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         mcButton3.isUserInteractionEnabled = false
         mcButton4.isUserInteractionEnabled = false
         
+        gameTimer.invalidate()
+        timerLabel.isHidden = true
+        
         guard let conversation = activeConversation else { fatalError("Expected conversation.") }
         if (self.mcCorrectButton == 0) {
             if(self.originalSender == conversation.localParticipantIdentifier) {
@@ -832,6 +882,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         mcButton2.isUserInteractionEnabled = false
         mcButton3.isUserInteractionEnabled = false
         mcButton4.isUserInteractionEnabled = false
+        
+        gameTimer.invalidate()
+        timerLabel.isHidden = true
         
         guard let conversation = activeConversation else { fatalError("Expected conversation.") }
         if (self.mcCorrectButton == 1) {
@@ -878,6 +931,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         mcButton3.isUserInteractionEnabled = false
         mcButton4.isUserInteractionEnabled = false
         
+        gameTimer.invalidate()
+        timerLabel.isHidden = true
+        
         guard let conversation = activeConversation else { fatalError("Expected conversation.") }
         if (self.mcCorrectButton == 2) {
             if(self.originalSender == conversation.localParticipantIdentifier) {
@@ -923,6 +979,9 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
         mcButton3.isUserInteractionEnabled = false
         mcButton4.isUserInteractionEnabled = false
         
+        gameTimer.invalidate()
+        timerLabel.isHidden = true
+        
         guard let conversation = activeConversation else { fatalError("Expected conversation.") }
         if (self.mcCorrectButton == 3) {
             if(self.originalSender == conversation.localParticipantIdentifier) {
@@ -965,12 +1024,28 @@ class MessagesViewController: MSMessagesAppViewController, UISearchBarDelegate, 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
         if self.originalSender == conversation.localParticipantIdentifier && self.questionNumber - 1 != self.term_count { self.questionNumber += 1 }
-        let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!)
+        let quiz = Quiz(setTitle: self.setTitle, setAuthor: self.setAuthor, term_count: self.term_count, setID: self.setID, questionNumber: self.questionNumber, numberCorrect: self.numberCorrect, opponentNumberCorrect: self.opponentNumberCorrect, originalSender: self.originalSender!, timer: self.timer)
         composeMessage(quiz: quiz)
     }
     
     @IBAction func unlockTimedPressed(_ sender: UIButton) {
         IAPService.shared.purchase(product: .timed)
+    }
+    
+    @objc func updateTimer() {
+        seconds -= 1     // This will decrement(count down)the seconds.
+        self.timerLabel.text = "\(self.seconds)" // This will update the label.
+        if self.seconds <= 0 {
+            self.timerLabel.text = "Time's Up!"
+            self.idkButton.isUserInteractionEnabled = false
+            self.termTextBox.isUserInteractionEnabled = false
+            self.mcButton1.isUserInteractionEnabled = false
+            self.mcButton2.isUserInteractionEnabled = false
+            self.mcButton3.isUserInteractionEnabled = false
+            self.mcButton4.isUserInteractionEnabled = false
+            self.sendButton.isHidden = false
+            self.opponentLastCorrect = false
+        }
     }
     
 }
